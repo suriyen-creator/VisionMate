@@ -1,0 +1,25 @@
+model_name,scenario_id,scenario_name,start_time,latency_ms,tokens_generated,tokens_per_sec,timeout_triggered,accuracy_pct,has_hallucination,hallucination_details,omission_critical,completeness_score,is_concise,status,raw_output
+qwen2.5:0.5b,WARMUP,Cold Start Model Load,2026-10-29 19:54:35,6100.68,0,0.0,False,100.0,False,None,None,100.0,True,SUCCESS,WARMUP_COMPLETED
+qwen2.5:0.5b,SCENARIO_1,1-2 วัตถุ,2026-10-29 19:54:42,6849.68,8,8.43,False,0.0,False,None,แสงปกติ; แก้วน้ำสีแดง; ตรงหน้า; ระยะใกล้,0.0,True,SUCCESS,12 นาฬิกา
+qwen2.5:0.5b,SCENARIO_2,วัตถุตั้งแต่ 3 ชิ้นขึ้นไป,2026-10-29 19:54:53,10069.92,45,8.2,False,0.0,False,None,แสงปกติ; ขวดน้ำสีขาว หรือ แก้วน้ำสีน้ำเงิน; ระยะใกล้,0.0,True,SUCCESS,"เมื่อคุณพูดคุยเรื่องนี้, คุณสามารถใช้เวลาในการคิดและวิเคราะห์ข้อมูลได้ด้วยต"
+qwen2.5:0.5b,SCENARIO_3,วัตถุหลายชนิดและหลายสี,2026-10-29 19:55:05,10429.86,45,7.68,False,66.7,False,None,สว่างชัดเจน,66.7,True,SUCCESS,คนที่อยู่ตรงหน้าคือคนใส่เสื้อสีแดงอยู่ตรงหน้า (12 นาฬิกา) ระยะใกล้เอื้อมมือถ
+qwen2.5:0.5b,SCENARIO_4,วัตถุใกล้และไกล,2026-10-29 19:55:16,10195.84,45,7.97,False,33.3,False,None,แสงปกติ; แก้วน้ำสีส้ม,33.3,True,SUCCESS,"คนใส่เสื้อสีดำอยู่ทางซ้ายมือ (10 นาฬิกา) ระยะใกล้เอื้อมมือถึง, โต๊ะม"
+qwen2.5:0.5b,SCENARIO_5,สภาพแสงน้อย / ค่อนข้างมืด,2026-10-29 19:55:27,10194.95,45,7.97,False,0.0,True,แก้วน้ำสีแดง(Few-shot anchoring),ค่อนข้างมืด; ขวดน้ำสีดำ; ตรงหน้า,0.0,True,SUCCESS,ห้องนี้แสงสว่างปกติครับ มีแก้วน้ำสีแดงวางอยู่บนโต๊ะทางขวามือประมาณ 2 นาฬิกาในระยะเอ
+qwen2.5:0.5b,SCENARIO_6,ไม่พบวัตถุใดในภาพ,2026-10-29 19:55:39,10829.85,23,8.16,False,50.0,False,None,แสงปกติ,50.0,True,SUCCESS,แสงสว่างปกติครับ ไม่พบสิ่งของใดในภาพครับ
+qwen2.5:0.5b,SCENARIO_7,ข้อมูลไม่สมบูรณ์,2026-10-29 19:55:50,10125.63,45,8.19,False,66.7,False,None,ส้อม,66.7,True,SUCCESS,ข้อมูลที่ได้มาอยู่ในข้อความคือ:  1. แสงปกติ 2. ช้อนอยู่ทางขวามือ (2 นาฬิกา)
+qwen2.5:1.5b,WARMUP,Cold Start Model Load,2026-10-29 19:56:18,25025.98,0,0.0,True,0.0,False,None,None,100.0,True,TIMEOUT,WARMUP_COMPLETED
+qwen2.5:1.5b,SCENARIO_1,1-2 วัตถุ,2026-10-29 19:56:38,20023.26,0,0.0,True,0.0,False,None,แสงปกติ; แก้วน้ำสีแดง; ตรงหน้า; ระยะใกล้,0.0,True,TIMEOUT (>20s),CLIENT_TIMEOUT_EXCEEDED_20S
+qwen2.5:1.5b,SCENARIO_2,วัตถุตั้งแต่ 3 ชิ้นขึ้นไป,2026-10-29 19:56:56,16667.43,10,3.69,False,0.0,False,None,แสงปกติ; ขวดน้ำสีขาว หรือ แก้วน้ำสีน้ำเงิน; ระยะใกล้,0.0,True,SUCCESS,12นาฬิกา
+qwen2.5:1.5b,SCENARIO_3,วัตถุหลายชนิดและหลายสี,2026-10-29 19:57:17,20023.19,0,0.0,True,0.0,False,None,สว่างชัดเจน; คนใส่เสื้อสีแดง; ระยะใกล้,0.0,True,TIMEOUT (>20s),CLIENT_TIMEOUT_EXCEEDED_20S
+qwen2.5:1.5b,SCENARIO_4,วัตถุใกล้และไกล,2026-10-29 19:57:33,15862.28,5,3.63,False,33.3,False,None,แก้วน้ำสีส้ม; ระยะใกล้,33.3,True,SUCCESS,แสงปกติ
+qwen2.5:1.5b,SCENARIO_5,สภาพแสงน้อย / ค่อนข้างมืด,2026-10-29 19:57:55,20022.45,0,0.0,True,0.0,False,None,ค่อนข้างมืด; ขวดน้ำสีดำ; ตรงหน้า,0.0,True,TIMEOUT (>20s),CLIENT_TIMEOUT_EXCEEDED_20S
+qwen2.5:1.5b,SCENARIO_6,ไม่พบวัตถุใดในภาพ,2026-10-29 19:58:16,20023.38,0,0.0,True,0.0,False,None,ไม่พบสิ่งของ; แสงปกติ,0.0,True,TIMEOUT (>20s),CLIENT_TIMEOUT_EXCEEDED_20S
+qwen2.5:1.5b,SCENARIO_7,ข้อมูลไม่สมบูรณ์,2026-10-29 19:58:37,20026.23,0,0.0,True,0.0,False,None,แสงปกติ; ช้อน; ส้อม,0.0,True,TIMEOUT (>20s),CLIENT_TIMEOUT_EXCEEDED_20S
+llama3.2:1b,WARMUP,Cold Start Model Load,2026-10-29 19:59:05,25022.94,0,0.0,True,0.0,False,None,None,100.0,True,TIMEOUT,WARMUP_COMPLETED
+llama3.2:1b,SCENARIO_1,1-2 วัตถุ,2026-10-29 19:59:25,20026.63,0,0.0,True,0.0,False,None,แสงปกติ; แก้วน้ำสีแดง; ตรงหน้า; ระยะใกล้,0.0,True,TIMEOUT (>20s),CLIENT_TIMEOUT_EXCEEDED_20S
+llama3.2:1b,SCENARIO_2,วัตถุตั้งแต่ 3 ชิ้นขึ้นไป,2026-10-29 19:59:46,20023.12,0,0.0,True,0.0,False,None,แสงปกติ; ขวดน้ำสีขาว หรือ แก้วน้ำสีน้ำเงิน; ระยะใกล้,0.0,True,TIMEOUT (>20s),CLIENT_TIMEOUT_EXCEEDED_20S
+llama3.2:1b,SCENARIO_3,วัตถุหลายชนิดและหลายสี,2026-10-29 20:00:00,12953.94,10,2.66,False,33.3,False,None,สว่างชัดเจน; ระยะใกล้,33.3,True,SUCCESS,คนใส่เสื้อสีแดง |
+llama3.2:1b,SCENARIO_4,วัตถุใกล้และไกล,2026-10-29 20:00:13,12123.31,8,2.81,False,0.0,True,แก้วน้ำสีแดง(Few-shot anchoring),แสงปกติ; แก้วน้ำสีส้ม; ระยะใกล้,0.0,True,SUCCESS,แก้วน้ำสีแดง
+llama3.2:1b,SCENARIO_5,สภาพแสงน้อย / ค่อนข้างมืด,2026-10-29 20:00:34,20024.66,0,0.0,True,0.0,False,None,ค่อนข้างมืด; ขวดน้ำสีดำ; ตรงหน้า,0.0,True,TIMEOUT (>20s),CLIENT_TIMEOUT_EXCEEDED_20S
+llama3.2:1b,SCENARIO_6,ไม่พบวัตถุใดในภาพ,2026-10-29 20:00:55,20023.31,0,0.0,True,0.0,False,None,ไม่พบสิ่งของ; แสงปกติ,0.0,True,TIMEOUT (>20s),CLIENT_TIMEOUT_EXCEEDED_20S
+llama3.2:1b,SCENARIO_7,ข้อมูลไม่สมบูรณ์,2026-10-29 20:01:16,20022.46,0,0.0,True,0.0,False,None,แสงปกติ; ช้อน; ส้อม,0.0,True,TIMEOUT (>20s),CLIENT_TIMEOUT_EXCEEDED_20S

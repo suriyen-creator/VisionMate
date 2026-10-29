@@ -1,0 +1,11 @@
+[2026-10-29 18:49:17] LLM Exception in round 1: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)
+[2026-10-29 18:49:30] LLM Exception in round 2: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)
+[2026-10-29 18:49:43] LLM Exception in round 3: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)
+[2026-10-29 18:49:56] LLM Exception in round 4: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)
+[2026-10-29 18:50:09] LLM Exception in round 5: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)
+[2026-10-29 18:50:22] LLM Exception in round 6: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)
+[2026-10-29 18:50:35] LLM Exception in round 7: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)
+[2026-10-29 18:50:48] LLM Exception in round 8: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)
+[2026-10-29 18:51:01] LLM Exception in round 9: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)
+[2026-10-29 18:51:14] LLM Exception in round 10: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)
+[2026-10-29 18:55:41] Simulated offline TTS handled safely: Simulated Network Unreachable

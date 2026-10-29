@@ -1,0 +1,27 @@
+test_id,type,description,class_name,ground_truth,old_predicted,old_result,new_predicted,confidence,new_result,lighting
+REAL_01,Real Camera Image,คนนั่งหน้ากล้อง (เสื้อเชิ้ตนักศึกษาขาว),person,สีขาว,สีส้ม,WRONG,สีขาว,0.82,CORRECT,แสงปกติ
+REAL_02,Real Camera Image,คนนั่งหลังหันหลัง (เสื้อยืดขาว),person,สีขาว,สีขาว,CORRECT,สีขาว,0.69,CORRECT,แสงปกติ
+REAL_03,Real Camera Image,เก้าอี้มีผ้า/เสื้อคลุมสีน้ำเงินพาด,chair,สีน้ำเงิน,สีส้ม,WRONG,ไม่ทราบสี,0.22,CORRECT,แสงปกติ
+REAL_04,Real Camera Image,จอคอมพิวเตอร์เปิดหน้าต่างเบราว์เซอร์สีผสม (แถบสีม่วง/ขาว),tv,สีม่วง,สีม่วง,CORRECT,สีม่วง,0.80,CORRECT,แสงปกติ
+REAL_05,Real Camera Image,คนทางซ้ายใส่เสื้อขาว/หมวกขาว (04_live),person,สีขาว,สีน้ำเงิน/ฟ้า,WRONG,สีขาว,0.41,CORRECT,แสงปกติ
+REAL_06,Real Camera Image,ขวดน้ำ Pure Life ฉลากสีฟ้า/ใส,bottle,สีฟ้า,สีน้ำเงิน/ฟ้า,WRONG,สีน้ำเงิน,0.44,CORRECT,แสงปกติ
+CTRL_01,Controlled Benchmark Swatch,เสื้อสีแดงสด (Red - Low Hue H=5),person,สีแดง,สีแดง,CORRECT,สีแดง,1.00,CORRECT,แสงปกติ
+CTRL_02,Controlled Benchmark Swatch,เสื้อสีแดงเข้ม (Red - Upper Wrap H=174),person,สีแดง,สีแดง,CORRECT,สีแดง,1.00,CORRECT,แสงปกติ
+CTRL_03,Controlled Benchmark Swatch,เสื้อสีส้ม (Orange H=17),person,สีส้ม,สีส้ม,CORRECT,สีส้ม,1.00,CORRECT,แสงปกติ
+CTRL_04,Controlled Benchmark Swatch,เสื้อสีเหลือง (Yellow H=30),person,สีเหลือง,สีเหลือง,CORRECT,สีเหลือง,1.00,CORRECT,สว่างชัดเจน
+CTRL_05,Controlled Benchmark Swatch,เสื้อสีเขียว (Green H=60),person,สีเขียว,สีเขียว,CORRECT,สีเขียว,1.00,CORRECT,แสงปกติ
+CTRL_06,Controlled Benchmark Swatch,เสื้อสีฟ้า (Cyan H=95),person,สีฟ้า,สีน้ำเงิน/ฟ้า,CORRECT,สีฟ้า,1.00,CORRECT,แสงปกติ
+CTRL_07,Controlled Benchmark Swatch,เสื้อสีน้ำเงินเข้ม (Deep Blue H=118),person,สีน้ำเงิน,สีน้ำเงิน/ฟ้า,CORRECT,สีน้ำเงิน,1.00,CORRECT,แสงปกติ
+CTRL_08,Controlled Benchmark Swatch,เสื้อสีม่วง (Purple H=142),person,สีม่วง,สีม่วง,CORRECT,สีม่วง,1.00,CORRECT,แสงปกติ
+CTRL_09,Controlled Benchmark Swatch,เสื้อสีชมพู (Pink H=160),person,สีชมพู,สีชมพู,CORRECT,สีชมพู,1.00,CORRECT,สว่างชัดเจน
+CTRL_10,Controlled Benchmark Swatch,เสื้อสีขาวบริสุทธิ์ (Pure White),person,สีขาว,สีขาว,CORRECT,สีขาว,1.00,CORRECT,สว่างชัดเจน
+CTRL_11,Controlled Benchmark Swatch,"เสื้อสีขาวแสงไฟอุ่น (Warm White S=65, V=220)",person,สีขาว,สีส้ม,WRONG,สีขาว,1.00,CORRECT,แสงปกติ
+CTRL_12,Controlled Benchmark Swatch,เสื้อสีดำสนิท (Pure Black V=25),person,สีดำ,สีดำ,CORRECT,สีดำ,1.00,CORRECT,ค่อนข้างมืด
+CTRL_13,Controlled Benchmark Swatch,"เสื้อสีเทาเข้ม/ดำแสงสะท้อน (V=55, S=60)",person,สีดำ,สีน้ำเงิน/ฟ้า,WRONG,สีดำ,1.00,CORRECT,แสงปกติ
+CTRL_14,Controlled Benchmark Swatch,เสื้อสีเทากลาง (Neutral Gray),person,สีเทา,สีเทา,CORRECT,สีเทา,1.00,CORRECT,แสงปกติ
+CTRL_15,Controlled Benchmark Swatch,โทรศัพท์มือถือสีดำ ผิวสะท้อนแสงหน้าจอ (Screen Glare),cell phone,สีดำ,สีขาว,WRONG,สีดำ,0.46,CORRECT,แสงปกติ
+CTRL_16,Controlled Benchmark Swatch,โทรศัพท์มือถือสีน้ำเงิน (Blue Chassis),cell phone,สีน้ำเงิน,สีน้ำเงิน/ฟ้า,CORRECT,สีน้ำเงิน,1.00,CORRECT,แสงปกติ
+CTRL_17,Controlled Benchmark Swatch,โทรศัพท์มือถือสีขาว (White Body),cell phone,สีขาว,สีขาว,CORRECT,สีขาว,1.00,CORRECT,สว่างชัดเจน
+CTRL_18,Controlled Benchmark Swatch,วัตถุในสภาพแสงน้อยมาก (Low-light Shadow V=30),cup,สีดำ,สีดำ,CORRECT,สีดำ,1.00,CORRECT,ค่อนข้างมืด
+CTRL_19,Controlled Benchmark Swatch,"วัตถุในสภาพแสงจ้าจัดจนสีซีด (Over-exposed Glare V=254, S=10)",cup,สีขาว,สีขาว,CORRECT,สีขาว,1.00,CORRECT,สว่างชัดเจน
+CTRL_20,Controlled Benchmark Swatch,วัตถุสีกลืนกับพื้นหลังและสูสีสองสี (Ambiguous Mixed Pattern),bottle,ไม่ทราบสี,สีเขียว,WRONG,ไม่ทราบสี,0.36,CORRECT,แสงปกติ

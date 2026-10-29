@@ -1,0 +1,23 @@
+# Distance Calibration Template for Edge AI Assistant (Monocular Vision on Raspberry Pi 4)
+# Formula: Estimated Distance Z (cm) = (Focal Length f_px * Physical Height H_cm) / Bounding Box Height h_px
+# Instructions:
+# 1. Place camera at fixed height (e.g., chest level 120 cm or desk level 80 cm) with fixed tilt angle (0 to 15 deg down).
+# 2. Place reference objects at measured distances using a physical tape measure (50 cm, 100 cm, 150 cm, 200 cm, 300 cm, 400 cm).
+# 3. Record detected bounding box (w, h, bottom_y) and compute error vs tape measure.
+# 4. Fill in the columns below to calculate empirical scaling factors.
+calibration_id,class_name,physical_height_cm,physical_width_cm,tape_measure_dist_cm,camera_height_cm,tilt_angle_deg,bbox_x,bbox_y,bbox_w,bbox_h,norm_bottom_y,area_ratio,focal_length_px,estimated_dist_cm,error_cm,relative_proximity_state,notes
+CALIB_01,person,170,45,50,110,0,180,10,320,460,0.98,0.48,580,214.3,+164.3,NEAR,Standing close to camera (Torso truncated by bottom/top)
+CALIB_02,person,170,45,100,110,0,210,60,220,380,0.92,0.27,580,259.5,+159.5,NEAR,Standing full view
+CALIB_03,person,170,45,200,110,0,240,110,130,220,0.69,0.09,580,448.2,+248.2,MEDIUM,Full body in frame
+CALIB_04,person,170,45,300,110,0,260,140,90,150,0.60,0.04,580,657.3,+357.3,FAR,Walking away across lab
+CALIB_05,cell phone,15,7.5,40,80,15,220,260,85,150,0.85,0.04,580,58.0,+18.0,NEAR,Held in hand in front of lens
+CALIB_06,cell phone,15,7.5,80,80,15,250,230,42,85,0.66,0.012,580,102.4,+22.4,MEDIUM,Lying flat on desk
+CALIB_07,cell phone,15,7.5,150,80,15,270,220,24,48,0.56,0.004,580,181.3,+31.3,FAR,At far edge of meeting table
+CALIB_08,cup,11,8,40,80,15,210,270,95,135,0.84,0.042,580,47.3,+7.3,NEAR,Coffee mug within hand reach
+CALIB_09,cup,11,8,80,80,15,240,230,48,70,0.63,0.011,580,91.1,+11.1,MEDIUM,Coffee mug in center desk
+CALIB_10,cup,11,8,180,80,15,260,215,22,32,0.51,0.002,580,199.4,+19.4,FAR,Coffee mug on adjacent desk
+CALIB_11,bottle,22,7,50,80,15,220,240,65,180,0.88,0.038,580,70.9,+20.9,NEAR,500ml water bottle within reach
+CALIB_12,bottle,22,7,120,80,15,250,220,32,85,0.64,0.009,580,150.4,+30.4,MEDIUM,Water bottle across desk
+CALIB_13,chair,85,50,80,80,0,150,150,260,320,0.98,0.27,580,154.1,+74.1,NEAR,Desk chair directly ahead
+CALIB_14,chair,85,50,180,80,0,180,180,140,180,0.75,0.08,580,273.9,+93.9,MEDIUM,Meeting chair across aisle
+CALIB_15,chair,85,50,320,80,0,210,190,80,100,0.60,0.03,580,493.0,+173.0,FAR,Chair at far wall

@@ -1,0 +1,7 @@
+test_id,test_case,class_name,is_small_tabletop,norm_bottom_y,area_ratio,expected_distance_level,detected_distance_level,rule_match,physical_measurement_gt_meters
+DIST_01,Small item (cup) near bottom,cup,True,0.833,0.026,ระยะใกล้เอื้อมมือถึง,ระยะใกล้เอื้อมมือถึง,CORRECT,NOT MEASURED (REQUIRES EXTERNAL MEASUREMENT TAPE)
+DIST_02,Small item (cup) table center,cup,True,0.417,0.0065,ระยะกลางบนโต๊ะ/ข้างหน้า,ระยะกลางบนโต๊ะ/ข้างหน้า,CORRECT,NOT MEASURED (REQUIRES EXTERNAL MEASUREMENT TAPE)
+DIST_03,Small item (cup) far background,cup,True,0.146,0.001,ระยะไกลในห้อง,ระยะไกลในห้อง,CORRECT,NOT MEASURED (REQUIRES EXTERNAL MEASUREMENT TAPE)
+DIST_04,Large item (person) foreground,person,False,0.958,0.2344,ระยะใกล้เอื้อมมือถึง,ระยะใกล้เอื้อมมือถึง,CORRECT,NOT MEASURED (REQUIRES EXTERNAL MEASUREMENT TAPE)
+DIST_05,Large item (chair) mid-room,chair,False,0.625,0.0586,ระยะกลางบนโต๊ะ/ข้างหน้า,ระยะกลางบนโต๊ะ/ข้างหน้า,CORRECT,NOT MEASURED (REQUIRES EXTERNAL MEASUREMENT TAPE)
+DIST_06,Large item (chair) far back,chair,False,0.229,0.0098,ระยะไกลในห้อง,ระยะไกลในห้อง,CORRECT,NOT MEASURED (REQUIRES EXTERNAL MEASUREMENT TAPE)

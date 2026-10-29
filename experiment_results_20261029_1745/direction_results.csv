@@ -1,0 +1,10 @@
+test_id,position_category,normalized_center_x,pixel_center_x,expected_direction,detected_direction,match,threshold_rule
+DIR_01,Extreme Left,0.1,64,ทางซ้ายมือ (10 นาฬิกา),ทางซ้ายมือ (10 นาฬิกา),CORRECT,<0.38: 10 o'clock | 0.38-0.62: 12 o'clock | >0.62: 2 o'clock
+DIR_02,Mid Left,0.25,160,ทางซ้ายมือ (10 นาฬิกา),ทางซ้ายมือ (10 นาฬิกา),CORRECT,<0.38: 10 o'clock | 0.38-0.62: 12 o'clock | >0.62: 2 o'clock
+DIR_03,Left Boundary (<0.38),0.37,236,ทางซ้ายมือ (10 นาฬิกา),ทางซ้ายมือ (10 นาฬิกา),CORRECT,<0.38: 10 o'clock | 0.38-0.62: 12 o'clock | >0.62: 2 o'clock
+DIR_04,Center Left Boundary (>=0.38),0.39,249,ตรงหน้า (12 นาฬิกา),ตรงหน้า (12 นาฬิกา),CORRECT,<0.38: 10 o'clock | 0.38-0.62: 12 o'clock | >0.62: 2 o'clock
+DIR_05,Dead Center,0.5,320,ตรงหน้า (12 นาฬิกา),ตรงหน้า (12 นาฬิกา),CORRECT,<0.38: 10 o'clock | 0.38-0.62: 12 o'clock | >0.62: 2 o'clock
+DIR_06,Center Right Boundary (<=0.62),0.61,390,ตรงหน้า (12 นาฬิกา),ตรงหน้า (12 นาฬิกา),CORRECT,<0.38: 10 o'clock | 0.38-0.62: 12 o'clock | >0.62: 2 o'clock
+DIR_07,Right Boundary (>0.62),0.63,403,ทางขวามือ (2 นาฬิกา),ทางขวามือ (2 นาฬิกา),CORRECT,<0.38: 10 o'clock | 0.38-0.62: 12 o'clock | >0.62: 2 o'clock
+DIR_08,Mid Right,0.75,480,ทางขวามือ (2 นาฬิกา),ทางขวามือ (2 นาฬิกา),CORRECT,<0.38: 10 o'clock | 0.38-0.62: 12 o'clock | >0.62: 2 o'clock
+DIR_09,Extreme Right,0.9,576,ทางขวามือ (2 นาฬิกา),ทางขวามือ (2 นาฬิกา),CORRECT,<0.38: 10 o'clock | 0.38-0.62: 12 o'clock | >0.62: 2 o'clock

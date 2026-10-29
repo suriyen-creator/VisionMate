@@ -1,0 +1,4 @@
+test_id,description,item_class,surface_class,ground_truth_relation,expected_surface,detected_surface,phrase_output,match
+REL_01,Cup placed directly on dining table surface,cup,dining table,on_table,บนโต๊ะ,บนโต๊ะ,แก้วน้ำสีดำวางอยู่บนโต๊ะ ตรงหน้า (12 นาฬิกา) ระยะใกล้เอื้อมมือถึง,CORRECT
+REL_02,Cup placed above table boundary (abs bottom_y - sy < 40),cup,dining table,on_table_rim,บนโต๊ะ,บนโต๊ะ,แก้วน้ำสีดำวางอยู่บนโต๊ะ ตรงหน้า (12 นาฬิกา) ระยะกลางบนโต๊ะ/ข้างหน้า,CORRECT
+REL_03,Cup placed far outside table area (on the floor to the left),cup,dining table,off_table_left,None,None,แก้วน้ำสีดำอยู่ทางซ้ายมือ (10 นาฬิกา) ระยะใกล้เอื้อมมือถึง,CORRECT

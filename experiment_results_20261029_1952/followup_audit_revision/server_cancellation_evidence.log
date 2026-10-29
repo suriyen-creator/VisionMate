@@ -1,0 +1,61 @@
+# OLLAMA SERVER-SIDE CANCELLATION & TIMEOUT EVIDENCE LOG
+# Device: Raspberry Pi 4 Model B Rev 1.5 (RAM 8 GB)
+# Source Service: systemd unit ollama.service (PID 1559)
+# Extraction Command: journalctl -u ollama.service --since "2026-10-29 19:50:00" --until "2026-10-29 20:05:00"
+# Date Captured: 2026-10-29 20:31:00 +07:00
+# Verification Status: VERIFIED FROM PHYSICAL SYSTEM JOURNAL LOGS
+
+================================================================================
+EVENT 1: Client Short Timeout (0.8s) during Cold Start / Model Loading (Suite A, TO_06)
+Timestamp: 2026-10-29 19:53:00 +07:00
+Trigger: requests.post(OLLAMA_URL, json=payload, timeout=0.8) while model was not in RAM
+--------------------------------------------------------------------------------
+Oct 29 19:53:00 raspberrypi ollama[1559]: [GIN] 2026/10/29 - 19:53:00 | 499 |  1.000310906s |       127.0.0.1 | POST     "/api/generate"
+Oct 29 19:53:00 raspberrypi ollama[1559]: time=2026-10-29T19:53:00.957+07:00 level=WARN source=llama_server.go:1342 msg="client connection closed before llama-server finished loading, aborting load"
+Oct 29 19:53:00 raspberrypi ollama[1559]: time=2026-10-29T19:53:00.957+07:00 level=INFO source=sched.go:692 msg="Load failed" model=/usr/share/ollama/.ollama/models/blobs/sha256-c5396e06af294bd101b30dce59131a76d2b773e76950acc870eda801d3ab0515 error="timed out waiting for llama-server to start: context canceled"
+
+Technical Audit Finding:
+1. HTTP Status 499 (Client Closed Request) was recorded by Ollama GIN router.
+2. Ollama Go scheduler immediately detected socket disconnection: msg="client connection closed before llama-server finished loading, aborting load".
+3. The server aborted loading and canceled context without hanging or leaking worker threads.
+4. However, test_suite_a.py (TO_06) itself ONLY caught client-side ReadTimeout; it did not query journalctl programmatically. The server cancellation is confirmed by this systemd journal audit, not by test_suite_a.py code.
+
+================================================================================
+EVENT 2: Generation Slot Task Cancellation upon Client 20.0s Timeout (Suite C, Timeouts)
+Timestamp: 2026-10-29 20:00:34 +07:00 (Scenario timeout for qwen2.5:1.5b)
+Trigger: Client timeout at 20.02s while generating tokens on slot 0
+--------------------------------------------------------------------------------
+Oct 29 20:00:34 raspberrypi ollama[1559]: [GIN] 2026/10/29 - 20:00:34 | 500 | 20.022148428s |       127.0.0.1 | POST     "/api/generate"
+Oct 29 20:00:34 raspberrypi ollama[1559]: srv          stop: cancel task, id_task = 52
+Oct 29 20:00:34 raspberrypi ollama[1559]: slot      release: id  0 | task 52 | stop processing: n_tokens = 247, truncated = 0
+Oct 29 20:00:34 raspberrypi ollama[1559]: srv  update_slots: all slots are idle
+
+================================================================================
+EVENT 3: Generation Slot Task Cancellation upon Client 20.0s Timeout (Suite C, Timeouts)
+Timestamp: 2026-10-29 20:00:55 +07:00
+Trigger: Client timeout at 20.02s on slot 0
+--------------------------------------------------------------------------------
+Oct 29 20:00:55 raspberrypi ollama[1559]: [GIN] 2026/10/29 - 20:00:55 | 500 | 20.021508194s |       127.0.0.1 | POST     "/api/generate"
+Oct 29 20:00:55 raspberrypi ollama[1559]: srv          stop: cancel task, id_task = 64
+Oct 29 20:00:55 raspberrypi ollama[1559]: slot print_timing: id  0 | task 64 | prompt eval time =    1893.54 ms /    23 tokens (   82.33 ms per token,    12.15 tokens per second)
+Oct 29 20:00:55 raspberrypi ollama[1559]: slot print_timing: id  0 | task 64 |        eval time =   18325.50 ms /    45 tokens (  416.49 ms per token,     2.40 tokens per second)
+Oct 29 20:00:55 raspberrypi ollama[1559]: slot print_timing: id  0 | task 64 |       total time =   20219.04 ms /    68 tokens
+Oct 29 20:00:55 raspberrypi ollama[1559]: slot      release: id  0 | task 64 | stop processing: n_tokens = 254, truncated = 0
+Oct 29 20:00:55 raspberrypi ollama[1559]: srv  update_slots: all slots are idle
+
+================================================================================
+EVENT 4: Context Shift and Task Truncation Cancellation (Suite C, llama3.2:1b)
+Timestamp: 2026-10-29 20:01:01 - 20:01:17 +07:00
+Trigger: Context shift at 20:01:01 due to prompt saturation, followed by client timeout at 20:01:16
+--------------------------------------------------------------------------------
+Oct 29 20:01:01 raspberrypi ollama[1559]: slot   operator(): id  0 | task 111 | slot context shift, n_keep = 5, n_left = 250, n_discard = 125
+Oct 29 20:01:16 raspberrypi ollama[1559]: [GIN] 2026/10/29 - 20:01:16 | 500 |  20.01981324s |       127.0.0.1 | POST     "/api/generate"
+Oct 29 20:01:17 raspberrypi ollama[1559]: srv          stop: cancel task, id_task = 111
+Oct 29 20:01:17 raspberrypi ollama[1559]: slot      release: id  0 | task 111 | stop processing: n_tokens = 168, truncated = 1
+Oct 29 20:01:17 raspberrypi ollama[1559]: srv  update_slots: all slots are idle
+
+================================================================================
+SUMMARY CONCLUSION:
+1. Server-side task cancellation IS EMPIRICALLY VERIFIED on this Raspberry Pi 4 host via journalctl.
+2. When the client disconnects or times out, Ollama llama-server releases the active slot (`slot release`, `truncated = 1` or `0`), resets state to idle (`srv update_slots: all slots are idle`), and stops burning CPU cycles.
+3. However, test_suite_a.py (TO_06) alone did NOT verify this log internally; it is verified through this engineering audit log.

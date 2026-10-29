@@ -1,0 +1,291 @@
+iteration,task_name,stage_category,latency_ms,status,details
+1,Camera Capture (640x480),vision,38.559,SUCCESS,"frame_shape=(480, 640, 3)"
+2,Camera Capture (640x480),vision,41.074,SUCCESS,"frame_shape=(480, 640, 3)"
+3,Camera Capture (640x480),vision,37.552,SUCCESS,"frame_shape=(480, 640, 3)"
+4,Camera Capture (640x480),vision,38.481,SUCCESS,"frame_shape=(480, 640, 3)"
+5,Camera Capture (640x480),vision,41.403,SUCCESS,"frame_shape=(480, 640, 3)"
+6,Camera Capture (640x480),vision,39.407,SUCCESS,"frame_shape=(480, 640, 3)"
+7,Camera Capture (640x480),vision,38.433,SUCCESS,"frame_shape=(480, 640, 3)"
+8,Camera Capture (640x480),vision,39.368,SUCCESS,"frame_shape=(480, 640, 3)"
+9,Camera Capture (640x480),vision,40.591,SUCCESS,"frame_shape=(480, 640, 3)"
+10,Camera Capture (640x480),vision,38.473,SUCCESS,"frame_shape=(480, 640, 3)"
+11,Camera Capture (640x480),vision,39.5,SUCCESS,"frame_shape=(480, 640, 3)"
+12,Camera Capture (640x480),vision,39.245,SUCCESS,"frame_shape=(480, 640, 3)"
+13,Camera Capture (640x480),vision,40.279,SUCCESS,"frame_shape=(480, 640, 3)"
+14,Camera Capture (640x480),vision,38.696,SUCCESS,"frame_shape=(480, 640, 3)"
+15,Camera Capture (640x480),vision,40.175,SUCCESS,"frame_shape=(480, 640, 3)"
+16,Camera Capture (640x480),vision,38.434,SUCCESS,"frame_shape=(480, 640, 3)"
+17,Camera Capture (640x480),vision,39.493,SUCCESS,"frame_shape=(480, 640, 3)"
+18,Camera Capture (640x480),vision,39.191,SUCCESS,"frame_shape=(480, 640, 3)"
+19,Camera Capture (640x480),vision,39.429,SUCCESS,"frame_shape=(480, 640, 3)"
+20,Camera Capture (640x480),vision,39.404,SUCCESS,"frame_shape=(480, 640, 3)"
+21,Camera Capture (640x480),vision,39.973,SUCCESS,"frame_shape=(480, 640, 3)"
+22,Camera Capture (640x480),vision,78.421,SUCCESS,"frame_shape=(480, 640, 3)"
+23,Camera Capture (640x480),vision,39.314,SUCCESS,"frame_shape=(480, 640, 3)"
+24,Camera Capture (640x480),vision,39.408,SUCCESS,"frame_shape=(480, 640, 3)"
+25,Camera Capture (640x480),vision,39.826,SUCCESS,"frame_shape=(480, 640, 3)"
+26,Camera Capture (640x480),vision,39.108,SUCCESS,"frame_shape=(480, 640, 3)"
+27,Camera Capture (640x480),vision,40.636,SUCCESS,"frame_shape=(480, 640, 3)"
+28,Camera Capture (640x480),vision,38.636,SUCCESS,"frame_shape=(480, 640, 3)"
+29,Camera Capture (640x480),vision,37.535,SUCCESS,"frame_shape=(480, 640, 3)"
+30,Camera Capture (640x480),vision,39.788,SUCCESS,"frame_shape=(480, 640, 3)"
+1,Image Quality & Blur Check,vision,11.304,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+2,Image Quality & Blur Check,vision,10.368,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+3,Image Quality & Blur Check,vision,12.19,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+4,Image Quality & Blur Check,vision,9.906,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+5,Image Quality & Blur Check,vision,9.789,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+6,Image Quality & Blur Check,vision,9.861,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+7,Image Quality & Blur Check,vision,9.574,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+8,Image Quality & Blur Check,vision,9.721,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+9,Image Quality & Blur Check,vision,9.953,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+10,Image Quality & Blur Check,vision,10.236,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+11,Image Quality & Blur Check,vision,10.678,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+12,Image Quality & Blur Check,vision,10.018,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+13,Image Quality & Blur Check,vision,12.625,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+14,Image Quality & Blur Check,vision,9.708,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+15,Image Quality & Blur Check,vision,9.634,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+16,Image Quality & Blur Check,vision,9.695,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+17,Image Quality & Blur Check,vision,9.673,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+18,Image Quality & Blur Check,vision,10.113,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+19,Image Quality & Blur Check,vision,10.079,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+20,Image Quality & Blur Check,vision,11.496,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+21,Image Quality & Blur Check,vision,11.057,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+22,Image Quality & Blur Check,vision,9.832,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+23,Image Quality & Blur Check,vision,10.342,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+24,Image Quality & Blur Check,vision,9.913,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+25,Image Quality & Blur Check,vision,9.75,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+26,Image Quality & Blur Check,vision,9.823,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+27,Image Quality & Blur Check,vision,9.691,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+28,Image Quality & Blur Check,vision,10.591,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+29,Image Quality & Blur Check,vision,10.022,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+30,Image Quality & Blur Check,vision,11.627,SUCCESS,"blocked=False, brightness=132.7, lap_var=81.8"
+1,YOLO Preprocess (Letterbox 320x320),vision,4.923,SUCCESS,target_size=320x320
+1,YOLO ONNX Session.Run (4 threads),vision,185.917,SUCCESS,onnx_model=yolov8n.onnx
+1,YOLO Postprocess (NMS & BBox Decode),vision,29.842,SUCCESS,num_detections=4
+1,Feature Extraction (HSV Color + Spatial),feature,16.486,SUCCESS,analyzed_objects=4
+2,YOLO Preprocess (Letterbox 320x320),vision,11.68,SUCCESS,target_size=320x320
+2,YOLO ONNX Session.Run (4 threads),vision,173.891,SUCCESS,onnx_model=yolov8n.onnx
+2,YOLO Postprocess (NMS & BBox Decode),vision,28.733,SUCCESS,num_detections=4
+2,Feature Extraction (HSV Color + Spatial),feature,4.025,SUCCESS,analyzed_objects=4
+3,YOLO Preprocess (Letterbox 320x320),vision,4.138,SUCCESS,target_size=320x320
+3,YOLO ONNX Session.Run (4 threads),vision,212.386,SUCCESS,onnx_model=yolov8n.onnx
+3,YOLO Postprocess (NMS & BBox Decode),vision,26.849,SUCCESS,num_detections=4
+3,Feature Extraction (HSV Color + Spatial),feature,2.615,SUCCESS,analyzed_objects=4
+4,YOLO Preprocess (Letterbox 320x320),vision,4.276,SUCCESS,target_size=320x320
+4,YOLO ONNX Session.Run (4 threads),vision,173.811,SUCCESS,onnx_model=yolov8n.onnx
+4,YOLO Postprocess (NMS & BBox Decode),vision,29.266,SUCCESS,num_detections=4
+4,Feature Extraction (HSV Color + Spatial),feature,3.002,SUCCESS,analyzed_objects=4
+5,YOLO Preprocess (Letterbox 320x320),vision,5.325,SUCCESS,target_size=320x320
+5,YOLO ONNX Session.Run (4 threads),vision,176.325,SUCCESS,onnx_model=yolov8n.onnx
+5,YOLO Postprocess (NMS & BBox Decode),vision,28.446,SUCCESS,num_detections=4
+5,Feature Extraction (HSV Color + Spatial),feature,2.864,SUCCESS,analyzed_objects=4
+6,YOLO Preprocess (Letterbox 320x320),vision,4.43,SUCCESS,target_size=320x320
+6,YOLO ONNX Session.Run (4 threads),vision,181.729,SUCCESS,onnx_model=yolov8n.onnx
+6,YOLO Postprocess (NMS & BBox Decode),vision,26.58,SUCCESS,num_detections=4
+6,Feature Extraction (HSV Color + Spatial),feature,3.072,SUCCESS,analyzed_objects=4
+7,YOLO Preprocess (Letterbox 320x320),vision,4.389,SUCCESS,target_size=320x320
+7,YOLO ONNX Session.Run (4 threads),vision,181.595,SUCCESS,onnx_model=yolov8n.onnx
+7,YOLO Postprocess (NMS & BBox Decode),vision,28.614,SUCCESS,num_detections=4
+7,Feature Extraction (HSV Color + Spatial),feature,4.005,SUCCESS,analyzed_objects=4
+8,YOLO Preprocess (Letterbox 320x320),vision,5.158,SUCCESS,target_size=320x320
+8,YOLO ONNX Session.Run (4 threads),vision,166.431,SUCCESS,onnx_model=yolov8n.onnx
+8,YOLO Postprocess (NMS & BBox Decode),vision,27.162,SUCCESS,num_detections=4
+8,Feature Extraction (HSV Color + Spatial),feature,2.9,SUCCESS,analyzed_objects=4
+9,YOLO Preprocess (Letterbox 320x320),vision,4.33,SUCCESS,target_size=320x320
+9,YOLO ONNX Session.Run (4 threads),vision,171.918,SUCCESS,onnx_model=yolov8n.onnx
+9,YOLO Postprocess (NMS & BBox Decode),vision,27.725,SUCCESS,num_detections=4
+9,Feature Extraction (HSV Color + Spatial),feature,2.928,SUCCESS,analyzed_objects=4
+10,YOLO Preprocess (Letterbox 320x320),vision,4.429,SUCCESS,target_size=320x320
+10,YOLO ONNX Session.Run (4 threads),vision,163.712,SUCCESS,onnx_model=yolov8n.onnx
+10,YOLO Postprocess (NMS & BBox Decode),vision,26.724,SUCCESS,num_detections=4
+10,Feature Extraction (HSV Color + Spatial),feature,2.824,SUCCESS,analyzed_objects=4
+11,YOLO Preprocess (Letterbox 320x320),vision,4.81,SUCCESS,target_size=320x320
+11,YOLO ONNX Session.Run (4 threads),vision,172.279,SUCCESS,onnx_model=yolov8n.onnx
+11,YOLO Postprocess (NMS & BBox Decode),vision,27.362,SUCCESS,num_detections=4
+11,Feature Extraction (HSV Color + Spatial),feature,3.429,SUCCESS,analyzed_objects=4
+12,YOLO Preprocess (Letterbox 320x320),vision,4.392,SUCCESS,target_size=320x320
+12,YOLO ONNX Session.Run (4 threads),vision,177.759,SUCCESS,onnx_model=yolov8n.onnx
+12,YOLO Postprocess (NMS & BBox Decode),vision,44.584,SUCCESS,num_detections=4
+12,Feature Extraction (HSV Color + Spatial),feature,5.557,SUCCESS,analyzed_objects=4
+13,YOLO Preprocess (Letterbox 320x320),vision,5.244,SUCCESS,target_size=320x320
+13,YOLO ONNX Session.Run (4 threads),vision,175.554,SUCCESS,onnx_model=yolov8n.onnx
+13,YOLO Postprocess (NMS & BBox Decode),vision,29.002,SUCCESS,num_detections=4
+13,Feature Extraction (HSV Color + Spatial),feature,3.027,SUCCESS,analyzed_objects=4
+14,YOLO Preprocess (Letterbox 320x320),vision,4.323,SUCCESS,target_size=320x320
+14,YOLO ONNX Session.Run (4 threads),vision,181.813,SUCCESS,onnx_model=yolov8n.onnx
+14,YOLO Postprocess (NMS & BBox Decode),vision,26.758,SUCCESS,num_detections=4
+14,Feature Extraction (HSV Color + Spatial),feature,3.061,SUCCESS,analyzed_objects=4
+15,YOLO Preprocess (Letterbox 320x320),vision,4.131,SUCCESS,target_size=320x320
+15,YOLO ONNX Session.Run (4 threads),vision,183.502,SUCCESS,onnx_model=yolov8n.onnx
+15,YOLO Postprocess (NMS & BBox Decode),vision,26.843,SUCCESS,num_detections=4
+15,Feature Extraction (HSV Color + Spatial),feature,3.527,SUCCESS,analyzed_objects=4
+16,YOLO Preprocess (Letterbox 320x320),vision,7.174,SUCCESS,target_size=320x320
+16,YOLO ONNX Session.Run (4 threads),vision,176.042,SUCCESS,onnx_model=yolov8n.onnx
+16,YOLO Postprocess (NMS & BBox Decode),vision,43.187,SUCCESS,num_detections=4
+16,Feature Extraction (HSV Color + Spatial),feature,4.484,SUCCESS,analyzed_objects=4
+17,YOLO Preprocess (Letterbox 320x320),vision,5.152,SUCCESS,target_size=320x320
+17,YOLO ONNX Session.Run (4 threads),vision,197.045,SUCCESS,onnx_model=yolov8n.onnx
+17,YOLO Postprocess (NMS & BBox Decode),vision,28.598,SUCCESS,num_detections=4
+17,Feature Extraction (HSV Color + Spatial),feature,3.242,SUCCESS,analyzed_objects=4
+18,YOLO Preprocess (Letterbox 320x320),vision,4.568,SUCCESS,target_size=320x320
+18,YOLO ONNX Session.Run (4 threads),vision,178.158,SUCCESS,onnx_model=yolov8n.onnx
+18,YOLO Postprocess (NMS & BBox Decode),vision,28.394,SUCCESS,num_detections=4
+18,Feature Extraction (HSV Color + Spatial),feature,3.014,SUCCESS,analyzed_objects=4
+19,YOLO Preprocess (Letterbox 320x320),vision,4.46,SUCCESS,target_size=320x320
+19,YOLO ONNX Session.Run (4 threads),vision,183.074,SUCCESS,onnx_model=yolov8n.onnx
+19,YOLO Postprocess (NMS & BBox Decode),vision,26.628,SUCCESS,num_detections=4
+19,Feature Extraction (HSV Color + Spatial),feature,3.013,SUCCESS,analyzed_objects=4
+20,YOLO Preprocess (Letterbox 320x320),vision,4.531,SUCCESS,target_size=320x320
+20,YOLO ONNX Session.Run (4 threads),vision,187.145,SUCCESS,onnx_model=yolov8n.onnx
+20,YOLO Postprocess (NMS & BBox Decode),vision,26.127,SUCCESS,num_detections=4
+20,Feature Extraction (HSV Color + Spatial),feature,2.96,SUCCESS,analyzed_objects=4
+21,YOLO Preprocess (Letterbox 320x320),vision,4.065,SUCCESS,target_size=320x320
+21,YOLO ONNX Session.Run (4 threads),vision,188.55,SUCCESS,onnx_model=yolov8n.onnx
+21,YOLO Postprocess (NMS & BBox Decode),vision,26.303,SUCCESS,num_detections=4
+21,Feature Extraction (HSV Color + Spatial),feature,4.054,SUCCESS,analyzed_objects=4
+22,YOLO Preprocess (Letterbox 320x320),vision,4.399,SUCCESS,target_size=320x320
+22,YOLO ONNX Session.Run (4 threads),vision,301.236,SUCCESS,onnx_model=yolov8n.onnx
+22,YOLO Postprocess (NMS & BBox Decode),vision,29.456,SUCCESS,num_detections=4
+22,Feature Extraction (HSV Color + Spatial),feature,2.936,SUCCESS,analyzed_objects=4
+23,YOLO Preprocess (Letterbox 320x320),vision,4.658,SUCCESS,target_size=320x320
+23,YOLO ONNX Session.Run (4 threads),vision,184.647,SUCCESS,onnx_model=yolov8n.onnx
+23,YOLO Postprocess (NMS & BBox Decode),vision,26.997,SUCCESS,num_detections=4
+23,Feature Extraction (HSV Color + Spatial),feature,2.934,SUCCESS,analyzed_objects=4
+24,YOLO Preprocess (Letterbox 320x320),vision,4.212,SUCCESS,target_size=320x320
+24,YOLO ONNX Session.Run (4 threads),vision,183.209,SUCCESS,onnx_model=yolov8n.onnx
+24,YOLO Postprocess (NMS & BBox Decode),vision,28.011,SUCCESS,num_detections=4
+24,Feature Extraction (HSV Color + Spatial),feature,2.974,SUCCESS,analyzed_objects=4
+25,YOLO Preprocess (Letterbox 320x320),vision,4.684,SUCCESS,target_size=320x320
+25,YOLO ONNX Session.Run (4 threads),vision,188.953,SUCCESS,onnx_model=yolov8n.onnx
+25,YOLO Postprocess (NMS & BBox Decode),vision,27.762,SUCCESS,num_detections=4
+25,Feature Extraction (HSV Color + Spatial),feature,2.925,SUCCESS,analyzed_objects=4
+26,YOLO Preprocess (Letterbox 320x320),vision,4.161,SUCCESS,target_size=320x320
+26,YOLO ONNX Session.Run (4 threads),vision,216.35,SUCCESS,onnx_model=yolov8n.onnx
+26,YOLO Postprocess (NMS & BBox Decode),vision,28.249,SUCCESS,num_detections=4
+26,Feature Extraction (HSV Color + Spatial),feature,2.7,SUCCESS,analyzed_objects=4
+27,YOLO Preprocess (Letterbox 320x320),vision,4.39,SUCCESS,target_size=320x320
+27,YOLO ONNX Session.Run (4 threads),vision,188.008,SUCCESS,onnx_model=yolov8n.onnx
+27,YOLO Postprocess (NMS & BBox Decode),vision,26.808,SUCCESS,num_detections=4
+27,Feature Extraction (HSV Color + Spatial),feature,2.864,SUCCESS,analyzed_objects=4
+28,YOLO Preprocess (Letterbox 320x320),vision,4.189,SUCCESS,target_size=320x320
+28,YOLO ONNX Session.Run (4 threads),vision,185.237,SUCCESS,onnx_model=yolov8n.onnx
+28,YOLO Postprocess (NMS & BBox Decode),vision,26.883,SUCCESS,num_detections=4
+28,Feature Extraction (HSV Color + Spatial),feature,3.503,SUCCESS,analyzed_objects=4
+29,YOLO Preprocess (Letterbox 320x320),vision,4.675,SUCCESS,target_size=320x320
+29,YOLO ONNX Session.Run (4 threads),vision,196.934,SUCCESS,onnx_model=yolov8n.onnx
+29,YOLO Postprocess (NMS & BBox Decode),vision,29.327,SUCCESS,num_detections=4
+29,Feature Extraction (HSV Color + Spatial),feature,2.59,SUCCESS,analyzed_objects=4
+30,YOLO Preprocess (Letterbox 320x320),vision,4.125,SUCCESS,target_size=320x320
+30,YOLO ONNX Session.Run (4 threads),vision,191.941,SUCCESS,onnx_model=yolov8n.onnx
+30,YOLO Postprocess (NMS & BBox Decode),vision,27.99,SUCCESS,num_detections=4
+30,Feature Extraction (HSV Color + Spatial),feature,2.578,SUCCESS,analyzed_objects=4
+1,Fast Path Narrative (Python Rule),narrative,0.0041,SUCCESS,text_len=171
+2,Fast Path Narrative (Python Rule),narrative,0.0038,SUCCESS,text_len=171
+3,Fast Path Narrative (Python Rule),narrative,0.0029,SUCCESS,text_len=171
+4,Fast Path Narrative (Python Rule),narrative,0.0026,SUCCESS,text_len=171
+5,Fast Path Narrative (Python Rule),narrative,0.0024,SUCCESS,text_len=171
+6,Fast Path Narrative (Python Rule),narrative,0.0023,SUCCESS,text_len=171
+7,Fast Path Narrative (Python Rule),narrative,0.0022,SUCCESS,text_len=171
+8,Fast Path Narrative (Python Rule),narrative,0.0022,SUCCESS,text_len=171
+9,Fast Path Narrative (Python Rule),narrative,0.0022,SUCCESS,text_len=171
+10,Fast Path Narrative (Python Rule),narrative,0.0022,SUCCESS,text_len=171
+11,Fast Path Narrative (Python Rule),narrative,0.0022,SUCCESS,text_len=171
+12,Fast Path Narrative (Python Rule),narrative,0.0023,SUCCESS,text_len=171
+13,Fast Path Narrative (Python Rule),narrative,0.0023,SUCCESS,text_len=171
+14,Fast Path Narrative (Python Rule),narrative,0.0022,SUCCESS,text_len=171
+15,Fast Path Narrative (Python Rule),narrative,0.0023,SUCCESS,text_len=171
+16,Fast Path Narrative (Python Rule),narrative,0.0023,SUCCESS,text_len=171
+17,Fast Path Narrative (Python Rule),narrative,0.0024,SUCCESS,text_len=171
+18,Fast Path Narrative (Python Rule),narrative,0.0023,SUCCESS,text_len=171
+19,Fast Path Narrative (Python Rule),narrative,0.0024,SUCCESS,text_len=171
+20,Fast Path Narrative (Python Rule),narrative,0.0023,SUCCESS,text_len=171
+21,Fast Path Narrative (Python Rule),narrative,0.0023,SUCCESS,text_len=171
+22,Fast Path Narrative (Python Rule),narrative,0.0026,SUCCESS,text_len=171
+23,Fast Path Narrative (Python Rule),narrative,0.0023,SUCCESS,text_len=171
+24,Fast Path Narrative (Python Rule),narrative,0.0023,SUCCESS,text_len=171
+25,Fast Path Narrative (Python Rule),narrative,0.0023,SUCCESS,text_len=171
+26,Fast Path Narrative (Python Rule),narrative,0.0022,SUCCESS,text_len=171
+27,Fast Path Narrative (Python Rule),narrative,0.0023,SUCCESS,text_len=171
+28,Fast Path Narrative (Python Rule),narrative,0.0023,SUCCESS,text_len=171
+29,Fast Path Narrative (Python Rule),narrative,0.0022,SUCCESS,text_len=171
+30,Fast Path Narrative (Python Rule),narrative,0.0024,SUCCESS,text_len=171
+1,LLM Path (Qwen2.5-0.5B Ollama),narrative,12022.109,TIMEOUT_OR_ERROR,"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)"
+2,LLM Path (Qwen2.5-0.5B Ollama),narrative,12013.812,TIMEOUT_OR_ERROR,"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)"
+3,LLM Path (Qwen2.5-0.5B Ollama),narrative,12015.24,TIMEOUT_OR_ERROR,"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)"
+4,LLM Path (Qwen2.5-0.5B Ollama),narrative,12011.733,TIMEOUT_OR_ERROR,"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)"
+5,LLM Path (Qwen2.5-0.5B Ollama),narrative,12015.684,TIMEOUT_OR_ERROR,"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)"
+6,LLM Path (Qwen2.5-0.5B Ollama),narrative,12014.899,TIMEOUT_OR_ERROR,"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)"
+7,LLM Path (Qwen2.5-0.5B Ollama),narrative,12011.789,TIMEOUT_OR_ERROR,"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)"
+8,LLM Path (Qwen2.5-0.5B Ollama),narrative,12017.188,TIMEOUT_OR_ERROR,"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)"
+9,LLM Path (Qwen2.5-0.5B Ollama),narrative,12012.885,TIMEOUT_OR_ERROR,"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)"
+10,LLM Path (Qwen2.5-0.5B Ollama),narrative,12017.309,TIMEOUT_OR_ERROR,"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=12)"
+1,gTTS Synthesis (Network API),audio,494.297,SUCCESS,"file_bytes=63744, char_len=64"
+2,gTTS Synthesis (Network API),audio,450.694,SUCCESS,"file_bytes=63744, char_len=64"
+3,gTTS Synthesis (Network API),audio,455.653,SUCCESS,"file_bytes=63744, char_len=64"
+4,gTTS Synthesis (Network API),audio,372.484,SUCCESS,"file_bytes=63744, char_len=64"
+5,gTTS Synthesis (Network API),audio,311.135,SUCCESS,"file_bytes=63744, char_len=64"
+6,gTTS Synthesis (Network API),audio,330.202,SUCCESS,"file_bytes=63744, char_len=64"
+7,gTTS Synthesis (Network API),audio,305.724,SUCCESS,"file_bytes=63744, char_len=64"
+8,gTTS Synthesis (Network API),audio,389.765,SUCCESS,"file_bytes=63744, char_len=64"
+9,gTTS Synthesis (Network API),audio,281.845,SUCCESS,"file_bytes=63744, char_len=64"
+10,gTTS Synthesis (Network API),audio,311.438,SUCCESS,"file_bytes=63744, char_len=64"
+1,Audio Cache Read (/dev/shm),audio,0.3063,SUCCESS,bytes_read=20352
+2,Audio Cache Read (/dev/shm),audio,0.0573,SUCCESS,bytes_read=20352
+3,Audio Cache Read (/dev/shm),audio,0.04,SUCCESS,bytes_read=20352
+4,Audio Cache Read (/dev/shm),audio,0.0387,SUCCESS,bytes_read=20352
+5,Audio Cache Read (/dev/shm),audio,0.0371,SUCCESS,bytes_read=20352
+6,Audio Cache Read (/dev/shm),audio,0.0366,SUCCESS,bytes_read=20352
+7,Audio Cache Read (/dev/shm),audio,0.0365,SUCCESS,bytes_read=20352
+8,Audio Cache Read (/dev/shm),audio,0.0361,SUCCESS,bytes_read=20352
+9,Audio Cache Read (/dev/shm),audio,0.0363,SUCCESS,bytes_read=20352
+10,Audio Cache Read (/dev/shm),audio,0.0363,SUCCESS,bytes_read=20352
+11,Audio Cache Read (/dev/shm),audio,0.0374,SUCCESS,bytes_read=20352
+12,Audio Cache Read (/dev/shm),audio,0.0369,SUCCESS,bytes_read=20352
+13,Audio Cache Read (/dev/shm),audio,0.0362,SUCCESS,bytes_read=20352
+14,Audio Cache Read (/dev/shm),audio,0.0361,SUCCESS,bytes_read=20352
+15,Audio Cache Read (/dev/shm),audio,0.0359,SUCCESS,bytes_read=20352
+16,Audio Cache Read (/dev/shm),audio,0.0357,SUCCESS,bytes_read=20352
+17,Audio Cache Read (/dev/shm),audio,0.0362,SUCCESS,bytes_read=20352
+18,Audio Cache Read (/dev/shm),audio,0.0365,SUCCESS,bytes_read=20352
+19,Audio Cache Read (/dev/shm),audio,0.0356,SUCCESS,bytes_read=20352
+20,Audio Cache Read (/dev/shm),audio,0.0362,SUCCESS,bytes_read=20352
+21,Audio Cache Read (/dev/shm),audio,0.0355,SUCCESS,bytes_read=20352
+22,Audio Cache Read (/dev/shm),audio,0.0722,SUCCESS,bytes_read=20352
+23,Audio Cache Read (/dev/shm),audio,0.0378,SUCCESS,bytes_read=20352
+24,Audio Cache Read (/dev/shm),audio,0.0356,SUCCESS,bytes_read=20352
+25,Audio Cache Read (/dev/shm),audio,0.0368,SUCCESS,bytes_read=20352
+26,Audio Cache Read (/dev/shm),audio,0.0366,SUCCESS,bytes_read=20352
+27,Audio Cache Read (/dev/shm),audio,0.0357,SUCCESS,bytes_read=20352
+28,Audio Cache Read (/dev/shm),audio,0.1504,SUCCESS,bytes_read=20352
+29,Audio Cache Read (/dev/shm),audio,0.06,SUCCESS,bytes_read=20352
+30,Audio Cache Read (/dev/shm),audio,0.0354,SUCCESS,bytes_read=20352
+1,Pygame Load Music Buffer (Software Latency),audio,0.3048,SUCCESS,volume=0.0_no_speaker_sound
+2,Pygame Load Music Buffer (Software Latency),audio,0.1429,SUCCESS,volume=0.0_no_speaker_sound
+3,Pygame Load Music Buffer (Software Latency),audio,0.1114,SUCCESS,volume=0.0_no_speaker_sound
+4,Pygame Load Music Buffer (Software Latency),audio,0.1079,SUCCESS,volume=0.0_no_speaker_sound
+5,Pygame Load Music Buffer (Software Latency),audio,0.1051,SUCCESS,volume=0.0_no_speaker_sound
+6,Pygame Load Music Buffer (Software Latency),audio,0.1047,SUCCESS,volume=0.0_no_speaker_sound
+7,Pygame Load Music Buffer (Software Latency),audio,0.1042,SUCCESS,volume=0.0_no_speaker_sound
+8,Pygame Load Music Buffer (Software Latency),audio,0.1054,SUCCESS,volume=0.0_no_speaker_sound
+9,Pygame Load Music Buffer (Software Latency),audio,0.1053,SUCCESS,volume=0.0_no_speaker_sound
+10,Pygame Load Music Buffer (Software Latency),audio,0.1044,SUCCESS,volume=0.0_no_speaker_sound
+11,Pygame Load Music Buffer (Software Latency),audio,0.1047,SUCCESS,volume=0.0_no_speaker_sound
+12,Pygame Load Music Buffer (Software Latency),audio,0.1048,SUCCESS,volume=0.0_no_speaker_sound
+13,Pygame Load Music Buffer (Software Latency),audio,0.1045,SUCCESS,volume=0.0_no_speaker_sound
+14,Pygame Load Music Buffer (Software Latency),audio,0.1045,SUCCESS,volume=0.0_no_speaker_sound
+15,Pygame Load Music Buffer (Software Latency),audio,0.1044,SUCCESS,volume=0.0_no_speaker_sound
+16,Pygame Load Music Buffer (Software Latency),audio,0.105,SUCCESS,volume=0.0_no_speaker_sound
+17,Pygame Load Music Buffer (Software Latency),audio,0.1029,SUCCESS,volume=0.0_no_speaker_sound
+18,Pygame Load Music Buffer (Software Latency),audio,0.1046,SUCCESS,volume=0.0_no_speaker_sound
+19,Pygame Load Music Buffer (Software Latency),audio,0.1048,SUCCESS,volume=0.0_no_speaker_sound
+20,Pygame Load Music Buffer (Software Latency),audio,0.1045,SUCCESS,volume=0.0_no_speaker_sound
+21,Pygame Load Music Buffer (Software Latency),audio,0.1046,SUCCESS,volume=0.0_no_speaker_sound
+22,Pygame Load Music Buffer (Software Latency),audio,0.1041,SUCCESS,volume=0.0_no_speaker_sound
+23,Pygame Load Music Buffer (Software Latency),audio,0.1181,SUCCESS,volume=0.0_no_speaker_sound
+24,Pygame Load Music Buffer (Software Latency),audio,0.1269,SUCCESS,volume=0.0_no_speaker_sound
+25,Pygame Load Music Buffer (Software Latency),audio,0.1116,SUCCESS,volume=0.0_no_speaker_sound
+26,Pygame Load Music Buffer (Software Latency),audio,0.1029,SUCCESS,volume=0.0_no_speaker_sound
+27,Pygame Load Music Buffer (Software Latency),audio,0.1028,SUCCESS,volume=0.0_no_speaker_sound
+28,Pygame Load Music Buffer (Software Latency),audio,0.1026,SUCCESS,volume=0.0_no_speaker_sound
+29,Pygame Load Music Buffer (Software Latency),audio,0.1323,SUCCESS,volume=0.0_no_speaker_sound
+30,Pygame Load Music Buffer (Software Latency),audio,0.1105,SUCCESS,volume=0.0_no_speaker_sound

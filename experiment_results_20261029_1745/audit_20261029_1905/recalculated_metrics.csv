@@ -1,0 +1,24 @@
+category,metric_name,sample_size,unit,mean,median,std_dev,min,max,p95,notes
+Latency,Camera Capture (640x480),30,ms,40.661,39.406,7.069,37.535,78.421,41.255,Calculated strictly from SUCCESS rows in latency_raw.csv
+Latency,Image Quality & Blur Check,30,ms,10.309,9.986,0.788,9.574,12.625,11.937,Calculated strictly from SUCCESS rows in latency_raw.csv
+Latency,YOLO Preprocess (Letterbox 320x320),30,ms,4.847,4.429,1.398,4.065,11.68,6.342,Calculated strictly from SUCCESS rows in latency_raw.csv
+Latency,YOLO ONNX Session.Run (4 threads),30,ms,187.505,183.142,23.944,163.712,301.236,214.566,Calculated strictly from SUCCESS rows in latency_raw.csv
+Latency,YOLO Postprocess (NMS & BBox Decode),30,ms,28.84,27.876,4.152,26.127,44.584,37.182,Calculated strictly from SUCCESS rows in latency_raw.csv
+Latency,Feature Extraction (HSV Color + Spatial),30,ms,3.67,3.007,2.462,2.578,16.486,5.074,Calculated strictly from SUCCESS rows in latency_raw.csv
+Latency,Fast Path Narrative (Python Rule),30,ms,0.002,0.002,0.0,0.002,0.004,0.003,Calculated strictly from SUCCESS rows in latency_raw.csv
+Latency,gTTS Synthesis (Network API),10,ms,370.324,351.343,70.763,281.845,494.297,476.907,Calculated strictly from SUCCESS rows in latency_raw.csv
+Latency,Audio Cache Read (/dev/shm),30,ms,0.052,0.036,0.052,0.035,0.306,0.115,Calculated strictly from SUCCESS rows in latency_raw.csv
+Latency,Pygame Load Music Buffer (Software Latency),30,ms,0.115,0.105,0.036,0.103,0.305,0.138,Calculated strictly from SUCCESS rows in latency_raw.csv
+Latency,Vision Pipeline (Per-Iteration Sum),30,ms,275.833,268.966,30.241,246.398,426.28,298.294,True per-iteration sum of Camera+Quality+YOLO_Pre+ONNX+Post+Feature
+Resource,CPU Usage (Idle),15,%,7.69,4.7,6.68,2.0,28.6,19.36,System-wide aggregate CPU percentage (psutil.cpu_percent)
+Resource,CPU Temperature (Idle),15,°C,41.12,40.9,1.27,38.9,42.8,42.8,vcgencmd measure_temp
+Resource,RAM Used MB (Idle),15,MB,2048.1,2051.0,4.7,2038.8,2052.1,2052.0,Total RAM=7819.8 MB (7.63 GiB)
+Resource,CPU Usage (YOLO_Only),20,%,98.13,98.5,2.25,88.4,99.0,99.0,System-wide aggregate CPU percentage (psutil.cpu_percent)
+Resource,CPU Temperature (YOLO_Only),20,°C,49.75,50.1,2.33,44.3,53.0,52.52,vcgencmd measure_temp
+Resource,RAM Used MB (YOLO_Only),20,MB,2051.3,2050.3,2.5,2048.9,2056.3,2056.2,Total RAM=7819.8 MB (7.63 GiB)
+Resource,CPU Usage (LLM_Only),25,%,96.01,100.0,14.03,27.9,100.0,100.0,System-wide aggregate CPU percentage (psutil.cpu_percent)
+Resource,CPU Temperature (LLM_Only),25,°C,51.08,51.1,0.5,50.1,51.6,51.6,vcgencmd measure_temp
+Resource,RAM Used MB (LLM_Only),25,MB,2052.4,2052.7,1.0,2050.1,2053.4,2053.3,Total RAM=7819.8 MB (7.63 GiB)
+Resource,CPU Usage (Complete_Pipeline),30,%,96.58,99.9,9.96,44.6,100.0,100.0,System-wide aggregate CPU percentage (psutil.cpu_percent)
+Resource,CPU Temperature (Complete_Pipeline),30,°C,51.38,51.35,1.21,47.7,53.0,53.0,vcgencmd measure_temp
+Resource,RAM Used MB (Complete_Pipeline),30,MB,2055.9,2054.6,4.0,2050.7,2061.8,2061.4,Total RAM=7819.8 MB (7.63 GiB)

@@ -1,0 +1,64 @@
+================================================================================
+SOFTWARE VERSIONS & RUNTIME CONFIGURATION
+Generated at: 2026-10-29T17:45:00+07:00
+================================================================================
+
+1. PYTHON RUNTIME:
+Python Executable: /usr/bin/python3
+Python Version: 3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]
+Compiler: GCC 14.2.0
+
+2. CORE AI & COMPUTER VISION LIBRARIES:
+OpenCV (opencv-python): 5.0.0
+ONNX Runtime: 1.31.0 (Configured Providers: ['CPUExecutionProvider'])
+NumPy: 2.2.4
+Requests: 2.32.3
+Pygame: 2.6.1 (SDL: 2.32.4)
+gTTS: 2.5.4
+
+3. OBJECT DETECTION MODEL SPECIFICATION:
+Model Name: YOLOv8n ONNX
+File Path: /home/fablab-rp-21/edge_ai_project/yolov8n.onnx
+File Size: 12725024 bytes (12.14 MB)
+Runtime Engine: ONNX Runtime CPUExecutionProvider
+Execution Options in app.py:
+- Graph Optimization Level: ORT_ENABLE_ALL
+- Intra-op Threads: 4
+Input Image Dimension: 320 x 320 (3 Channels NCHW Float32 [0.0 - 1.0])
+Letterbox Padding Color: (114, 114, 114)
+NMS Parameters: conf_thresh = 0.35, nms_thresh = 0.45
+Class Categories: COCO 80 classes (with Thai localization in app.py)
+Alternative NCNN Model: Available at /home/fablab-rp-21/edge_ai_project/yolov8n_ncnn_model/ (model.ncnn.bin: 12.12 MB)
+
+4. LOCAL LLM (OLLAMA) CONFIGURATION:
+Ollama CLI Version: ollama version is 0.40.6
+Ollama Daemon: Active systemd service (ollama.service)
+Installed Local Models:
+NAME            ID              SIZE      MODIFIED    
+qwen2.5:1.5b    65ec06548149    986 MB    5 weeks ago    
+llama3.2:1b     baf6a787fdff    1.3 GB    5 weeks ago    
+qwen2.5:0.5b    a8b0c5157701    397 MB    6 weeks ago
+
+Active Model in app.py: qwen2.5:0.5b (ID: a8b0c5157701, Size: 397 MB)
+Inference Endpoint: http://localhost:11434/api/generate
+Parameters specified in app.py:
+- stream: False
+- keep_alive: -1 (Keeps model pinned in RAM to eliminate cold start)
+- options.num_ctx: 256
+- options.num_predict: 45
+- options.temperature: 0.2
+- options.num_thread: 4
+- API Timeout: 8.0 seconds with automatic Python Fallback
+
+5. TEXT-TO-SPEECH (TTS) & AUDIO CACHING:
+Engine: Google Text-to-Speech (gTTS 2.5.4)
+Target Language: Thai ('th')
+Temporary Output Path: /dev/shm/tts_output.mp3
+Pre-cached System Audio Prompts in RAM (/dev/shm/):
+- cached_ready.mp3 ("เริ่มระบบพร้อมใช้งาน")
+- cached_paused.mp3 ("หยุดพักการทำงานชั่วคราว")
+- cached_resumed.mp3 ("เริ่มการทำงานต่อ")
+- cached_mode_fast.mp3 ("โหมดหาของด่วน")
+- cached_mode_normal.mp3 ("โหมดเล่าบรรยากาศ")
+- cached_camera_dark.mp3 ("หน้ากล้องมืดหรือถูกบังครับ")
+- assistant_beep.wav (Synthesized 950Hz Sine Tone in RAM)

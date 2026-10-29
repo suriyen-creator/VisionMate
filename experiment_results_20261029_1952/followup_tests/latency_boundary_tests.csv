@@ -1,0 +1,7 @@
+metric_name,sample_size,unit,mean,median,min,max,p95,measurement_boundary,acoustic_sound_included,notes
+Camera-to-Detection,30,ms,274.479,261.883,236.746,428.041,363.088,t_start -> t_yolo_nms_finished (Camera + Precheck + YOLO),False,Direct live timing on Raspberry Pi 4 CPU with USB camera (volume=0.0)
+Camera-to-Narrative,30,ms,277.692,264.516,239.165,431.451,366.436,t_start -> t_narrative_generated (Vision + Spatial/Color + Python Rule),False,Direct live timing on Raspberry Pi 4 CPU with USB camera (volume=0.0)
+Camera-to-Audio-Command,30,ms,278.399,264.888,239.522,431.824,367.073,t_start -> t_audio_dispatched (Vision + Narrative + Pygame Load Buffer),False,Direct live timing on Raspberry Pi 4 CPU with USB camera (volume=0.0)
+Audio File Read Latency,30,ms,0.167,0.145,0.134,0.461,0.27,Reading MP3 file from RAM /dev/shm,False,Direct live timing on Raspberry Pi 4 CPU with USB camera (volume=0.0)
+Audio Buffer Load Latency,30,ms,0.537,0.225,0.212,8.554,0.631,pygame.mixer.music.load(cached_audio),False,Direct live timing on Raspberry Pi 4 CPU with USB camera (volume=0.0)
+LLM API Latency (qwen2.5:0.5b),7,ms,9533.2,10304.5,5178.6,11719.2,11355.9,Ollama HTTP generate round-trip time (N=7 scenarios from Suite C),False,"Direct API latency; in app.py, 8.0s timeout forces Python fallback if exceeded"

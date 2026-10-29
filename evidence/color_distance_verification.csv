@@ -1,0 +1,26 @@
+test_id,category,name,class_name,ground_truth,old_prediction,prediction,status,confidence,latency_ms
+COLOR_SWATCH_WHITE,Color_Synthetic_Swatch,White Shirt (Warm),person,สีขาว,,สีขาว,PASS,1.0,2.053
+COLOR_SWATCH_BLACK,Color_Synthetic_Swatch,Black Phone (Matte),cell phone,สีดำ,,สีดำ,PASS,1.0,1.643
+COLOR_SWATCH_GRAY,Color_Synthetic_Swatch,Gray Laptop,laptop,สีเทา,,สีเทา,PASS,1.0,1.514
+COLOR_SWATCH_RED,Color_Synthetic_Swatch,Red Cup,cup,สีแดง,,สีแดง,PASS,1.0,2.543
+COLOR_SWATCH_ORANGE,Color_Synthetic_Swatch,Orange Bottle,bottle,สีส้ม,,สีส้ม,PASS,1.0,2.176
+COLOR_SWATCH_YELLOW,Color_Synthetic_Swatch,Yellow Book,book,สีเหลือง,,สีเหลือง,PASS,1.0,1.937
+COLOR_SWATCH_GREEN,Color_Synthetic_Swatch,Green Umbrella,umbrella,สีเขียว,,สีเขียว,PASS,1.0,2.051
+COLOR_SWATCH_CYAN,Color_Synthetic_Swatch,Cyan Chair,chair,สีฟ้า,,สีฟ้า,PASS,1.0,2.219
+COLOR_SWATCH_BLUE,Color_Synthetic_Swatch,Blue Backpack,backpack,สีน้ำเงิน,,สีน้ำเงิน,PASS,1.0,2.077
+COLOR_SWATCH_PURPLE,Color_Synthetic_Swatch,Purple Couch,couch,สีม่วง,,สีม่วง,PASS,1.0,2.044
+COLOR_SWATCH_PINK,Color_Synthetic_Swatch,Pink Handbag,handbag,สีชมพู,,สีชมพู,PASS,1.0,2.058
+COLOR_SWATCH_AMBIGUOUS_SPLIT,Color_Synthetic_Swatch,50/50 Split Red/Blue Patch,cup,ไม่ทราบสี,,ไม่ทราบสี,PASS,0.35,2.236
+DIST_TABLE_CUP_FAR,Distance_Boundary_Logic,"Far cup on desk (h=35, by=0.573, area=0.0028)",cup,FAR,NEAR (เอื้อมมือถึง),FAR,PASS,0.75,0.0164
+DIST_TABLE_CUP_MID,Distance_Boundary_Logic,"Mid cup on desk (h=60, by=0.500, area=0.0078)",cup,MEDIUM,MEDIUM,MEDIUM,PASS,0.8,0.0085
+DIST_TABLE_CUP_NEAR,Distance_Boundary_Logic,"Near cup in foreground (h=160, by=0.917, area=0.0625)",cup,NEAR,NEAR (เอื้อมมือถึง),NEAR,PASS,0.88,0.0052
+DIST_PHONE_FAR,Distance_Boundary_Logic,"Far phone on table (w=20, h=40, area=0.0026)",cell phone,FAR,NEAR (เอื้อมมือถึง),FAR,PASS,0.75,0.0056
+DIST_PHONE_MID,Distance_Boundary_Logic,"Mid phone on table (w=45, h=90, area=0.0132)",cell phone,MEDIUM,NEAR (เอื้อมมือถึง),MEDIUM,PASS,0.8,0.0041
+DIST_PHONE_NEAR,Distance_Boundary_Logic,"Near phone in hand/reach (w=90, h=140, area=0.0410)",cell phone,NEAR,NEAR (เอื้อมมือถึง),NEAR,PASS,0.88,0.0041
+DIST_PERSON_NEAR,Distance_Boundary_Logic,"Near person in front of camera (h=470, area=0.51)",person,NEAR,NEAR (เอื้อมมือถึง),NEAR,PASS,1.0,0.0086
+DIST_PERSON_MID,Distance_Boundary_Logic,"Medium person seated at opposite desk (h=212, area=0.14)",person,MEDIUM,MEDIUM,MEDIUM,PASS,0.85,0.0044
+DIST_PERSON_FAR,Distance_Boundary_Logic,"Far person seated across room ~3.5m (h=155, area=0.028)",person,FAR,MEDIUM,FAR,PASS,0.8,0.0041
+DIST_TRUNCATED_MONITOR,Distance_Boundary_Logic,Partial monitor cut off at edge x=0 (area=0.023),tv,DISTANCE_UNKNOWN,MEDIUM,DISTANCE_UNKNOWN,PASS,0.3,0.0057
+DIST_TINY_NOISE_BBOX,Distance_Boundary_Logic,"Tiny noise bounding box (5x5 px, area=25 px)",cup,DISTANCE_UNKNOWN,MEDIUM,DISTANCE_UNKNOWN,PASS,0.0,0.0014
+SENTENCE_FAST_PATH_KNOWN,Sentence_Generation,Fast Path narrative with known Near/Medium distance,multi-object,Valid Thai sentence with proximity levels,,ในห้องนี้แสงสว่างปกติครับ มีโทรศัพท์มือถือสีดำวางอยู่บนโต๊ะ ตรงหน้า (12 นาฬิกา) ระยะใกล้ และ คนใส่เสื้อสีขาวอยู่ทางซ้ายมือ (10 นาฬิกา) ระยะกลางครับ,PASS,1.0,0.0149
+SENTENCE_FAST_PATH_UNKNOWN_DISTANCE,Sentence_Generation,Fast Path narrative when distance is unknown/truncated,tv,Valid Thai sentence stating distance cannot be clearly estimated,,ในห้องนี้แสงสว่างปกติครับ มีจอโทรทัศน์อยู่ทางซ้ายมือ (10 นาฬิกา) แต่ยังประเมินระยะไม่ได้ชัดเจนครับ,PASS,1.0,0.0052

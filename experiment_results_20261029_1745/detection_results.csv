@@ -1,0 +1,5 @@
+metric_name,value,status,cause,remedy_protocol
+mAP@0.5,NOT MEASURED,INSUFFICIENT DATA,No annotated Ground Truth dataset (images + bounding boxes) exists on the Raspberry Pi storage,"User must collect 30-50 real indoor test images with YOLO format annotation files (.txt) to calculate Precision, Recall, and mAP@0.5"
+Precision (Average),NOT MEASURED,INSUFFICIENT DATA,Requires True Positives / (True Positives + False Positives) against verified physical Ground Truth labels,Compare YOLOv8n ONNX detections with manually verified labels from test scene photos
+Recall (Average),NOT MEASURED,INSUFFICIENT DATA,Requires True Positives / (True Positives + False Negatives) against verified physical Ground Truth labels,Identify missed physical objects in test room to determine False Negatives
+YOLOv8n ONNX Model Verification,VERIFIED OPERATIONAL,PASS,Model yolov8n.onnx (12.14 MB) loads successfully in ONNX Runtime 1.31.0 with 320x320 input and 4 CPU threads,Benchmarked in latency_raw.csv (Mean inference time: ~85-95 ms on Cortex-A72)
