@@ -87,6 +87,18 @@ flowchart TD
 
 ---
 
+## 🔍 การวิเคราะห์และเปรียบเทียบโมเดล (Model Analysis & Evolution)
+
+| การเปรียบเทียบ | สรุปประเด็นสำคัญ | รายละเอียดเพิ่มเติม |
+|---|---|:---:|
+| **ทำไมเลือก YOLOv8n ONNX + Qwen2.5-0.5B?** | • **YOLOv8n ONNX (320x320):** ความหน่วงลดจาก ~450ms เหลือ ~180ms, RAM ลดลง 87% เหลือเพียง ~185 MB<br>• **Qwen2.5-0.5B:** เร็ว 7.7–8.4 tokens/s ตอบจบใน 5–9s กิน RAM เพียง ~415 MB ไวยากรณ์ไทยถูกต้อง ไม่หลุดคำเพี้ยนเหมือน Llama<br>• **Smart On-Device Clear TTS:** เสียงพูดไทยเป็นธรรมชาติ คมชัด เล่นจากแคชในเครื่อง 0ms ออฟไลน์ 100% | [อ่านฉบับเต็ม](04_Model_Selection_and_Comparison.md#1-ทำไมถึงเลือกโมเดลนี้-model-selection-rationale) |
+| **เทียบกับระบบเวอร์ชันแรก (V1 Baseline vs V2)** | • แก้ปัญหากล้องค้างด้วย Dual-threaded Asynchronous Non-blocking (30 FPS)<br>• สถาปัตยกรรม Dual-Path Hybrid (Fast Path <0.1ms สำหรับหาของด่วน + LLM 15s)<br>• แก้ปัญหาเสื้อขาวเพี้ยนเป็นส้ม และมือถือดำเพี้ยนเป็นขาวด้วย Upper Torso & Glare Filter<br>• แก้บั๊กของไกล 2-3 เมตรถูกบอกว่า "ระยะใกล้" ด้วย Class-specific Proximity 4 ระดับ | [อ่านฉบับเต็ม](04_Model_Selection_and_Comparison.md#2-เปรียบเทียบกับระบบเวอร์ชันแรก-comparison-with-system-version-1--baseline) |
+| **เทียบโมเดลว่าตัวไหนดีกว่า (Empirical Benchmark)** | จากการทดสอบ 7 สถานการณ์บน Pi 4 จริง:<br>• **Qwen2.5-0.5B:** สำเร็จ 100% (7/7 ภายใต้ 20s cutoff), Latency ~9.8s<br>• **Qwen2.5-1.5B:** สำเร็จเพียง 28.6% (2/7), Timeout 5 ครั้ง (>20s)<br>• **Llama-3.2-1B:** สำเร็จเพียง 28.6% (2/7), ภาษาไทยไวยากรณ์เพี้ยน และช้า (2.7 tokens/s) | [อ่านฉบับเต็ม](04_Model_Selection_and_Comparison.md#3-เปรียบเทียบโมเดลว่าตัวไหนดีกว่า-empirical-model-benchmark--analysis) |
+
+> 📖 สามารถอ่านรายงานวิศวกรรมฉบับสมบูรณ์ได้ที่: [04_Model_Selection_and_Comparison.md](04_Model_Selection_and_Comparison.md)
+
+---
+
 ## 🛠️ อุปกรณ์ที่ต้องใช้ (Hardware Requirements)
 
 1. **บอร์ดประมวลผล:** Raspberry Pi 4 Model B (แนะนำรุ่น RAM 4 GB หรือ 8 GB)
@@ -170,6 +182,8 @@ VisionMate/
 ├── 01_Project_IoT_Rubric.md           # เกณฑ์การประเมินโครงงาน IoT / Embedded AI
 ├── 02_Project_Report.md               # เล่มรายงานโครงงานฉบับสมบูรณ์ 5 บท
 ├── 03_User_Manual.md                  # คู่มือการใช้งานระบบฉบับย่อสำหรับผู้ใช้
+├── 04_Model_Selection_and_Comparison.md # เอกสารวิศวกรรม: เหตุผลการเลือกโมเดล เทียบ V1 และ Benchmark ละเอียด
+├── audio_cache/                       # แคชไฟล์เสียงภาษาไทยคมชัดในเครื่อง (On-Device Zero Latency)
 │
 ├── evidence/                          # หลักฐานการทดสอบทางวิศวกรรมจริงบน Raspberry Pi 4
 │   ├── color_distance_fix_report.md   # รายงานเจาะลึกการแก้ไข Color & Distance Bug
