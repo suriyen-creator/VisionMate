@@ -4,15 +4,18 @@ app.py - Raspberry Pi 4 Edge AI Assistant for the Visually Impaired (Enhanced Ed
 ระบบช่วยเหลือผู้พิการทางสายตา: เล่าบรรยากาศในห้องและระบุตำแหน่งสิ่งของบนโต๊ะ
 ----------------------------------------------------------------------------------
 1. Non-blocking Controls & Multi-threading:
-   - Main Thread: จัดการกล้องและรับปุ่มกด (Space/p: Pause/Resume, f: Fast/Normal Mode, q: Quit)
+   - Main Thread: จัดการกล้องและรับปุ่มกด (Space/p: Pause/Resume, f: Fast/Normal Mode, m: Switch Model, q: Quit)
    - Background Worker Thread: รัน YOLOv8n ONNX + Color Detection + Ollama + TTS
    - รองรับ Headless Terminal: รับปุ่มกดจากคีย์บอร์ดใน Terminal ผ่าน select/termios แบบ Non-blocking
 2. ระบบ Hybrid & จูน Ollama:
    - Pre-cache ไฟล์เสียงระบบที่ใช้บ่อยใน /dev/shm/ เปิดเล่นได้ทันทีแบบ Zero Latency
    - โหมดหาของด่วน (Fast Mode) หรือพบวัตถุ 1-2 ชิ้น: สรุปด้วย Python ทันที
-   - โหมดเล่าบรรยากาศ (Normal Mode) และพบ 3 ชิ้นขึ้นไป: สรุปด้วย Ollama (qwen2.5:0.5b)
-   - จูน Ollama: keep_alive: -1, num_ctx: 256, num_predict: 45, timeout 8 วินาทีพร้อม Fallback
-3. ฟีเจอร์ Lightweight ด้วย OpenCV:
+   - โหมดเล่าบรรยากาศ (Normal Mode) และพบ 3 ชิ้นขึ้นไป: สรุปด้วย Ollama (qwen2.5:0.5b / qwen2.5:1.5b)
+   - จูน Ollama: keep_alive: -1, num_ctx: 256, num_predict: 40, timeout 15 วินาทีพร้อม Fallback
+3. ระบบเสียงพูดภาษาไทย (TTS) บนเครื่อง:
+   - On-Device Offline TTS (espeak-ng): สังเคราะห์เสียงในเครื่อง 100% ไม่ต้องต่อเน็ต Latency ต่ำและ Lightweight
+   - รองรับสลับเป็น Online gTTS ได้ผ่านอาร์กิวเมนต์ --tts gtts
+4. ฟีเจอร์ Lightweight ด้วย OpenCV:
    - ตรวจจับสีของวัตถุ (HSV Color Detection) บริเวณกึ่งกลาง 30% ของ Bounding Box
    - ตรวจจับหน้ากล้องมืดหรือนิ้วบังเลนส์ (Mean Brightness < 25 หรือ Laplacian Var < 15)
 """
@@ -21,17 +24,24 @@ import os
 import sys
 import time
 import shutil
+import hashlib
 import select
 import signal
 import threading
 import subprocess
 import wave
+import argparse
 import cv2
 import numpy as np
 import requests
 import onnxruntime as ort
 import pygame
-from gtts import gTTS
+
+try:
+    from gtts import gTTS
+    HAS_GTTS = True
+except ImportError:
+    HAS_GTTS = False
 
 # ----------------------------------------------------
 # 1. รายชื่อและพจนานุกรมแปล 80 คลาส COCO Dataset เป็นภาษาไทย
@@ -180,9 +190,12 @@ DISTANCE_LEVEL_TH = {
     DIST_UNKNOWN: "ยังประเมินระยะไม่ได้ชัดเจน"
 }
 
-# กำหนดเส้นทางไฟล์เสียงใน RAM (/dev/shm)
+# กำหนดเส้นทางไฟล์เสียงใน RAM (/dev/shm) และโฟลเดอร์แคชถาวรบนเครื่อง
 BEEP_SOUND_PATH = "/dev/shm/assistant_beep.wav"
-TTS_AUDIO_PATH = "/dev/shm/tts_output.mp3"
+TTS_AUDIO_PATH_MP3 = "/dev/shm/tts_output.mp3"
+TTS_AUDIO_PATH_WAV = "/dev/shm/tts_output.wav"
+AUDIO_CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "audio_cache")
+os.makedirs(AUDIO_CACHE_DIR, exist_ok=True)
 
 CACHED_PROMPTS = {
     "ready": "เริ่มระบบพร้อมใช้งาน",
@@ -190,8 +203,14 @@ CACHED_PROMPTS = {
     "resumed": "เริ่มการทำงานต่อ",
     "mode_fast": "โหมดหาของด่วน",
     "mode_normal": "โหมดเล่าบรรยากาศ",
-    "camera_dark": "หน้ากล้องมืดหรือถูกบังครับ"
+    "camera_dark": "หน้ากล้องมืดหรือถูกบังครับ",
+    "model_switched": "สลับโมเดลสำเร็จแล้วครับ"
 }
+
+# ตรวจสอบเครื่องมือเสียงและกำหนดเอนจินเริ่มต้นเป็น 'clear' (เสียงพูดชัดถ้อยชัดคำ + On-Device Cache)
+HAS_ESPEAK = shutil.which("espeak-ng") is not None
+DEFAULT_TTS_ENGINE = "clear" if HAS_GTTS else ("offline" if HAS_ESPEAK else "clear")
+CURRENT_TTS_ENGINE = DEFAULT_TTS_ENGINE
 
 # ล็อกสำหรับการเล่นเสียงผ่าน pygame.mixer
 audio_lock = threading.Lock()
@@ -199,8 +218,73 @@ audio_lock = threading.Lock()
 # ----------------------------------------------------
 # 2. ระบบจัดการเสียงและ Pre-cache ไฟล์เสียงระบบ
 # ----------------------------------------------------
-def init_audio_system():
-    """เตรียมระบบเสียง pygame และ Pre-cache ไฟล์เสียงที่ใช้บ่อยไว้ใน RAM"""
+def get_cached_audio_path(text):
+    """คำนวณ Path ไฟล์แคชเสียงถาวรบนเครื่องตาม MD5 ของข้อความ เพื่อการเล่นซ้ำแบบ 0ms และออฟไลน์ 100%"""
+    h = hashlib.md5(text.strip().encode("utf-8")).hexdigest()
+    return os.path.join(AUDIO_CACHE_DIR, f"{h}.mp3")
+
+def synthesize_speech(text, output_path, engine="clear"):
+    """
+    สร้างไฟล์เสียงภาษาไทยที่คมชัด ชัดเจน และเป็นธรรมชาติ
+    - clear (ค่าเริ่มต้น): ใช้เสียงธรรมชาติความละเอียดสูง (gTTS) พร้อมบันทึกแคชในเครื่อง (On-Device Cache)
+      เมื่อเคยพูดคำหรือประโยคนั้นแล้ว จะเปิดจากเครื่องทันทีใน 0 ms ไม่ต้องต่อเน็ต และน้ำหนักเบามาก
+    - offline: บังคับใช้ espeak-ng ออฟไลน์ล้วนๆ
+    - auto: ลอง gTTS + แคชก่อน หากต่อเน็ตไม่ได้จะสลับไป espeak-ng อัตโนมัติ
+    """
+    if not text or not text.strip():
+        return False
+    text = text.strip()
+
+    # 1. ตรวจสอบไฟล์ใน On-Device Cache ก่อนเสมอ (เร็วที่สุด 0ms, ไม่ใช้เน็ต, ปลอดภาระ CPU)
+    cache_file = get_cached_audio_path(text)
+    if os.path.exists(cache_file):
+        try:
+            if output_path != cache_file:
+                shutil.copyfile(cache_file, output_path)
+            return True
+        except Exception:
+            return True
+
+    # 2. โหมดเสียงคมชัดธรรมชาติ (clear / gtts / auto): ให้เสียงไทยที่ชัดเจน ถูกต้อง และเป็นธรรมชาติ
+    if (engine in ["clear", "gtts", "auto"]) and HAS_GTTS:
+        try:
+            mp3_path = output_path if output_path.endswith(".mp3") else output_path.replace(".wav", ".mp3")
+            tts = gTTS(text=text, lang="th")
+            tts.save(mp3_path)
+            # บันทึกลง On-Device Cache ถาวรเพื่อการใช้งานออฟไลน์ในครั้งต่อๆ ไป
+            try:
+                shutil.copyfile(mp3_path, cache_file)
+            except Exception:
+                pass
+            if mp3_path != output_path:
+                shutil.copyfile(mp3_path, output_path)
+            return True
+        except Exception as e:
+            if engine in ["clear", "auto"] and HAS_ESPEAK:
+                print(f"⚠️ [TTS Notice]: เครือข่ายไม่ตอบสนอง ({e}) สลับมาใช้เสียงออฟไลน์สำรองในเครื่อง")
+            else:
+                print(f"⚠️ [TTS Gen Error]: {e}")
+
+    # 3. โหมด offline หรือ Fallback เมื่อไม่มีอินเทอร์เน็ต: ใช้ espeak-ng ในเครื่อง
+    if HAS_ESPEAK:
+        try:
+            wav_path = output_path if output_path.endswith(".wav") else output_path.replace(".mp3", ".wav")
+            # จูนความเร็วและระดับเสียงให้ฟังชัดเจนขึ้น
+            cmd = ["espeak-ng", "-v", "th", "-s", "130", "-p", "50", "-w", wav_path, text]
+            res = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+            if res.returncode == 0 and os.path.exists(wav_path):
+                if wav_path != output_path:
+                    shutil.copyfile(wav_path, output_path)
+                return True
+        except Exception as e:
+            print(f"⚠️ [Offline Fallback Error]: {e}")
+
+    return False
+
+def init_audio_system(engine="clear"):
+    """เตรียมระบบเสียง pygame และ Pre-cache ไฟล์เสียงที่ใช้บ่อยไว้ใน RAM และ On-Device Cache"""
+    global CURRENT_TTS_ENGINE
+    CURRENT_TTS_ENGINE = engine
     try:
         pygame.mixer.init()
     except Exception as e:
@@ -223,13 +307,12 @@ def init_audio_system():
         except Exception as e:
             print(f"⚠️ [Beep Gen]: {e}")
 
-    # Pre-cache ข้อความระบบ
+    # Pre-cache ข้อความระบบลง RAM และ On-Device Cache
     for key, text in CACHED_PROMPTS.items():
-        cache_file = f"/dev/shm/cached_{key}.mp3"
-        if not os.path.exists(cache_file):
+        cache_ram = f"/dev/shm/cached_{key}.mp3"
+        if not os.path.exists(cache_ram):
             try:
-                tts = gTTS(text=text, lang="th")
-                tts.save(cache_file)
+                synthesize_speech(text, cache_ram, engine=engine)
             except Exception as e:
                 print(f"⚠️ [Pre-cache {key}]: {e}")
 
@@ -248,8 +331,16 @@ def play_beep():
 
 def play_cached_sound(key):
     """เปิดเล่นเสียงระบบจาก Cache ทันทีแบบ Non-blocking ใน Main Thread"""
-    cache_file = f"/dev/shm/cached_{key}.mp3"
-    if os.path.exists(cache_file):
+    if not pygame.mixer.get_init():
+        try:
+            pygame.mixer.init()
+        except Exception:
+            pass
+
+    mp3_cache = f"/dev/shm/cached_{key}.mp3"
+    wav_cache = f"/dev/shm/cached_{key}.wav"
+    cache_file = mp3_cache if os.path.exists(mp3_cache) else (wav_cache if os.path.exists(wav_cache) else None)
+    if cache_file:
         with audio_lock:
             try:
                 pygame.mixer.music.load(cache_file)
@@ -257,24 +348,39 @@ def play_cached_sound(key):
             except Exception as e:
                 print(f"⚠️ [Play Cached Error]: {e}")
 
-def speak_text(text, stop_event=None):
-    """แปลงข้อความเป็นเสียงภาษาไทยด้วย gTTS และเล่นเสียง (สามารถหยุดกลางคันได้ทันที)"""
+def speak_text(text, stop_event=None, engine=None):
+    """แปลงข้อความเป็นเสียงภาษาไทยที่ชัดเจน และเล่นเสียง พร้อมรองรับการหยุดทันที"""
     if not text or not text.strip():
         return
     if stop_event and stop_event.is_set():
         return
-        
-    try:
-        tts = gTTS(text=text.strip(), lang="th")
-        tts.save(TTS_AUDIO_PATH)
-        
-        if stop_event and stop_event.is_set():
+
+    if not pygame.mixer.get_init():
+        try:
+            pygame.mixer.init()
+        except Exception:
+            pass
+
+    active_engine = engine or CURRENT_TTS_ENGINE
+
+    # ตรวจสอบจาก On-Device Cache ก่อน
+    cache_path = get_cached_audio_path(text)
+    if os.path.exists(cache_path):
+        audio_path = cache_path
+    else:
+        audio_path = TTS_AUDIO_PATH_MP3
+        success = synthesize_speech(text, audio_path, engine=active_engine)
+        if not success or not os.path.exists(audio_path):
             return
-            
+
+    if stop_event and stop_event.is_set():
+        return
+
+    try:
         with audio_lock:
-            pygame.mixer.music.load(TTS_AUDIO_PATH)
+            pygame.mixer.music.load(audio_path)
             pygame.mixer.music.play()
-            
+
         # รอให้เสียงเล่นจบ พร้อมตรวจจับ stop_event ทุกๆ 30ms
         while pygame.mixer.music.get_busy():
             if stop_event and stop_event.is_set():
@@ -787,8 +893,10 @@ def analyze_spatial_and_relations(boxes, scores, class_ids, frame):
     return analyzed_objects
 
 # ----------------------------------------------------
-# 6. ระบบสร้างประโยคแบบ Hybrid & Ollama (qwen2.5:0.5b)
+# 6. ระบบสร้างประโยคแบบ Hybrid & Ollama (qwen2.5:0.5b / qwen2.5:1.5b)
 # ----------------------------------------------------
+DEFAULT_OLLAMA_MODEL = "qwen2.5:0.5b"
+DEFAULT_OLLAMA_TIMEOUT = 15.0
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 def generate_python_narrative(lighting_str, objects):
@@ -800,11 +908,11 @@ def generate_python_narrative(lighting_str, objects):
     joined_items = " และ ".join(items_phrases)
     return f"ในห้องนี้{lighting_str}ครับ มี{joined_items}ครับ"
 
-def query_ollama(lighting_str, objects):
+def query_ollama(lighting_str, objects, model=DEFAULT_OLLAMA_MODEL, timeout=DEFAULT_OLLAMA_TIMEOUT):
     """
-    ส่งข้อมูลให้ Ollama (qwen2.5:0.5b) สรุปภาพรวม
-    keep_alive: -1, num_ctx: 256, num_predict: 45, timeout: 8s
-    หากเกิน 8 วินาทีให้ Fallback เป็นประโยคจาก Python ทันที
+    ส่งข้อมูลให้ Ollama สรุปภาพรวม
+    keep_alive: -1, num_ctx: 256, num_predict: 40, timeout: 15s (ปรับได้)
+    หากเกิน 15 วินาทีให้ Fallback เป็นประโยคจาก Python ทันที
     """
     if not objects:
         return f"ในห้องนี้{lighting_str}ครับ ตอนนี้ไม่พบสิ่งของหรือคนในระยะสายตาครับ"
@@ -823,28 +931,30 @@ def query_ollama(lighting_str, objects):
         "ตอบ:"
     )
     
+    num_predict = 35 if "1.5b" in model else 40
+    
     payload = {
-        "model": "qwen2.5:0.5b",
+        "model": model,
         "prompt": prompt,
         "stream": False,
         "keep_alive": -1,
         "options": {
             "num_ctx": 256,
-            "num_predict": 45,
+            "num_predict": num_predict,
             "temperature": 0.2,
             "num_thread": 4
         }
     }
     
     try:
-        res = requests.post(OLLAMA_URL, json=payload, timeout=8)
+        res = requests.post(OLLAMA_URL, json=payload, timeout=timeout)
         if res.status_code == 200:
             text = res.json().get("response", "").strip()
             text = text.replace("ตอบ:", "").replace("คำตอบ:", "").strip()
             if text:
                 return text
     except requests.exceptions.Timeout:
-        print("⚡ [Hybrid Mode]: Ollama ตอบเกิน 8 วินาที สลับมาใช้ประโยคจาก Python ทันที")
+        print(f"⚡ [Hybrid Mode]: Ollama ตอบเกิน {timeout:.0f} วินาที สลับมาใช้ประโยคจาก Python ทันที")
     except Exception as e:
         print(f"⚠️ [Ollama Notice]: {e} (ใช้ระบบประกอบประโยคอัตโนมัติ)")
         
@@ -887,7 +997,7 @@ class NonBlockingKeyboard:
 # ----------------------------------------------------
 # 8. วาดภาพแสดงผลและข้อมูล HUD
 # ----------------------------------------------------
-def draw_hud(frame, objects, lighting_str, is_paused, fast_mode, is_blocked):
+def draw_hud(frame, objects, lighting_str, is_paused, fast_mode, is_blocked, model_name="qwen2.5:0.5b"):
     """วาด Bounding Box และแถบสถานะด้านบน-ล่าง"""
     annotated = frame.copy()
     h, w = frame.shape[:2]
@@ -920,7 +1030,7 @@ def draw_hud(frame, objects, lighting_str, is_paused, fast_mode, is_blocked):
     cv2.putText(annotated, f"[{state_str}]", (10, 24),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.55, state_color, 2, cv2.LINE_AA)
                 
-    mode_str = "FAST (No LLM)" if fast_mode else "NORMAL (LLM)"
+    mode_str = "FAST (Rule)" if fast_mode else f"LLM ({model_name})"
     mode_color = (255, 200, 0) if fast_mode else (220, 120, 255)
     cv2.putText(annotated, f"[{mode_str}]", (130, 24),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.55, mode_color, 1, cv2.LINE_AA)
@@ -931,7 +1041,7 @@ def draw_hud(frame, objects, lighting_str, is_paused, fast_mode, is_blocked):
                 
     # แถบแสดงคำแนะนำด้านล่าง
     cv2.rectangle(annotated, (0, h - 26), (w, h), (20, 20, 20), -1)
-    cv2.putText(annotated, "Controls: [Space/P: Pause/Resume]  [F: Switch Mode]  [Q: Quit]", (10, h - 8),
+    cv2.putText(annotated, "Controls: [Space/P: Pause]  [F: Mode]  [M: Model]  [Q: Quit]", (10, h - 8),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.45, (200, 200, 200), 1, cv2.LINE_AA)
     return annotated
 
@@ -1020,8 +1130,10 @@ def worker_loop(shared_state, stop_speech_event):
                 narrative = generate_python_narrative(lighting_str, analyzed_objects)
                 print(f"⚡ [Fast/Rule Mode]: {narrative}")
             else:
-                print(f"🤖 [Normal LLM Mode]: กำลังส่งข้อมูลให้ Ollama (timeout 8s)...")
-                narrative = query_ollama(lighting_str, analyzed_objects)
+                timeout_val = shared_state.get("ollama_timeout", 15.0)
+                model_name = shared_state.get("current_model", "qwen2.5:0.5b")
+                print(f"🤖 [Normal LLM Mode]: กำลังส่งข้อมูลให้ Ollama ({model_name}, timeout {timeout_val:.0f}s)...")
+                narrative = query_ollama(lighting_str, analyzed_objects, model=model_name, timeout=timeout_val)
                 print(f"🤖 [ผู้ช่วยนำทาง]: {narrative}")
                 
             if not shared_state["is_paused"] and shared_state["running"]:
@@ -1047,10 +1159,28 @@ def wait_with_interrupt(duration, shared_state, stop_speech_event):
 # 10. Main Thread & Loop
 # ----------------------------------------------------
 def main():
+    parser = argparse.ArgumentParser(description="Raspberry Pi 4 Edge AI Assistant for the Visually Impaired")
+    parser.add_argument("--model", type=str, default=os.environ.get("OLLAMA_MODEL", DEFAULT_OLLAMA_MODEL),
+                        help="ชื่อโมเดล Ollama (ค่าเริ่มต้น: qwen2.5:0.5b หรือสลับเป็น qwen2.5:1.5b)")
+    parser.add_argument("--timeout", type=float, default=DEFAULT_OLLAMA_TIMEOUT,
+                        help="เวลา Timeout สำหรับ Ollama หน่วยเป็นวินาที ก่อนตัดเป็น Python (ค่าเริ่มต้น: 15.0)")
+    parser.add_argument("--tts", type=str, choices=["clear", "gtts", "offline", "auto"], default=DEFAULT_TTS_ENGINE,
+                        help="ระบบเสียงสังเคราะห์ภาษาไทย: 'clear' (เสียงชัดเจนธรรมชาติ + On-Device Cache ในเครื่อง), 'offline' (espeak-ng), 'auto' (เสียงชัด + สำรองออฟไลน์)")
+    parser.add_argument("--fast", action="store_true",
+                        help="เริ่มต้นด้วยโหมดหาของด่วน (Fast Mode)")
+    args = parser.parse_args()
+
     print("=" * 65)
     print("🦯 ระบบช่วยเหลือผู้พิการทางสายตา (Raspberry Pi 4 - High Performance)")
-    print("   • Non-blocking Controls: [Space/P: Pause] [F: Mode] [Q: Quit]")
-    print("   • Hybrid Mode: สรุปด้วย Python อัตโนมัติเมื่อหาของด่วนหรือวัตถุน้อย")
+    print("   • Non-blocking Controls: [Space/P: Pause] [F: Mode] [M: Model] [Q: Quit]")
+    print(f"   • Hybrid Mode: Ollama ({args.model}) Timeout: {args.timeout:.0f}s -> Python Fallback")
+    if args.tts in ["clear", "gtts"]:
+        tts_mode_desc = "เสียงไทยชัดเจนธรรมชาติ + On-Device Cache (คมชัด สมจริง 0ms)"
+    elif args.tts == "offline":
+        tts_mode_desc = "espeak-ng ออฟไลน์ในเครื่อง (Robotic Fallback)"
+    else:
+        tts_mode_desc = "Auto (เสียงไทยชัดเจน + สลับออฟไลน์อัตโนมัติ)"
+    print(f"   • Thai TTS Engine: {tts_mode_desc}")
     print("   • HSV Color Detection & Camera Cover Detection")
     print("=" * 65)
 
@@ -1069,7 +1199,7 @@ def main():
         print("🖥️ รันในโหมด Headless (รับปุ่มกดผ่านคีย์บอร์ด Terminal ได้ทันที)")
 
     # เริ่มระบบเสียงและ Pre-cache
-    init_audio_system()
+    init_audio_system(engine=args.tts)
     play_cached_sound("ready")
 
     # เปิดคีย์บอร์ด Terminal แบบ Non-blocking
@@ -1090,8 +1220,11 @@ def main():
     shared_state = {
         "running": True,
         "is_paused": False,
-        "fast_mode": False,
+        "fast_mode": args.fast,
         "is_camera_blocked": False,
+        "current_model": args.model,
+        "ollama_timeout": args.timeout,
+        "tts_engine": args.tts,
         "latest_frame": None,
         "latest_objects": [],
         "latest_lighting": "แสงปกติ",
@@ -1140,7 +1273,8 @@ def main():
                     shared_state["latest_lighting"],
                     shared_state["is_paused"],
                     shared_state["fast_mode"],
-                    shared_state["is_camera_blocked"]
+                    shared_state["is_camera_blocked"],
+                    model_name=shared_state["current_model"]
                 )
                 try:
                     cv2.imshow("Raspberry Pi Edge AI - Blind Assistant", display_img)
@@ -1185,6 +1319,17 @@ def main():
                 else:
                     print("\n📖 [โหมด]: สลับเป็น 'โหมดเล่าบรรยากาศ' (LLM Mode)")
                     play_cached_sound("mode_normal")
+
+            elif key == "m":
+                # สลับโมเดลระหว่าง qwen2.5:0.5b และ qwen2.5:1.5b
+                curr_model = shared_state["current_model"]
+                new_model = "qwen2.5:1.5b" if "0.5b" in curr_model else "qwen2.5:0.5b"
+                shared_state["current_model"] = new_model
+                stop_speech_event.set()
+                with audio_lock:
+                    pygame.mixer.music.stop()
+                print(f"\n🔄 [โมเดล]: สลับเป็นโมเดล '{new_model}' (Timeout: {shared_state['ollama_timeout']:.0f}s)")
+                play_cached_sound("model_switched")
 
             elif key in ["q", "\x1b"]:  # 'q' หรือ ESC
                 print("\n👋 [ควบคุม]: สั่งปิดโปรแกรม...")

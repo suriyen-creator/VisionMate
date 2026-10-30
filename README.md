@@ -22,7 +22,7 @@
 
 1. **⚡ สถาปัตยกรรม 2 โหมดคู่ขนาน (Dual-Path Architecture):**
    - **โหมดหาของด่วน (Fast Path):** สร้างประโยคบรรยายภาษาไทยด้วยกฎเรขาคณิต (Zero-Latency Rule-based Engine) ให้คำตอบกระชับในเวลา $< 0.1\text{ ms}$
-   - **โหมดเล่าบรรยากาศ (Normal LLM Path):** ใช้โมเดลภาษาขนาดเล็ก **Qwen2.5-0.5B** รันผ่าน **Ollama** บนเครื่องจริง เพื่อสรุปภาพรวมห้องอย่างเป็นธรรมชาติ พร้อมระบบ **Hybrid Fallback** ตัดกลับมาใช้ Fast Path ทันทีหาก LLM ตอบช้ากว่า 8 วินาที
+   - **โหมดเล่าบรรยากาศ (Normal LLM Path):** ใช้โมเดลภาษาขนาดเล็ก **Qwen2.5-0.5B** (หรือเลือก **Qwen2.5-1.5B**) รันผ่าน **Ollama** บนเครื่องจริง เพื่อสรุปภาพรวมห้องอย่างเป็นธรรมชาติ พร้อมระบบ **Hybrid Fallback** ตัดกลับมาใช้ Fast Path ทันทีหาก LLM ตอบช้ากว่า 15 วินาที
 2. **🎯 การประเมินระยะสัมพัทธ์ 4 สถานะ (Relative Proximity Engine):**
    - ประเมินระยะด้วยเรขาคณิตเฉพาะคลาส (`NEAR` ระยะใกล้, `MEDIUM` ระยะกลาง, `FAR` ระยะไกล, และ `DISTANCE_UNKNOWN` ยังประเมินระยะไม่ได้ชัดเจน)
    - ปราศจากบั๊ก `OR` condition และกรองวัตถุที่แตะขอบภาพ (Edge Truncation)
@@ -57,13 +57,13 @@ flowchart TD
     
     Fusion --> Decision{"โหมดการทำงาน"}
     Decision -- "กด F: Fast Path" --> Fast["⚡ Python Rule Engine\nLatency < 0.1 ms"]
-    Decision -- "Normal Mode" --> Ollama["🦙 Ollama Local LLM\n(qwen2.5:0.5b @ 4 Cores)"]
+    Decision -- "Normal Mode" --> Ollama["🦙 Ollama Local LLM\n(qwen2.5:0.5b / qwen2.5:1.5b)"]
     
-    Ollama -- "ตอบภายใน 8s" --> Narrative["ประโยคบรรยายสรุป"]
-    Ollama -- "Timeout > 8s" --> Fast
+    Ollama -- "ตอบภายใน 15s" --> Narrative["ประโยคบรรยายสรุป"]
+    Ollama -- "Timeout > 15s" --> Fast
     Fast --> Narrative
     
-    Narrative --> TTS["🔊 เสียงพูดภาษาไทย\n- gTTS (แคชใน /dev/shm)\n- Pygame Mixer เล่นผ่านหูฟัง/ลำโพง"]
+    Narrative --> TTS["🔊 เสียงพูดภาษาไทยคมชัดธรรมชาติ (Smart On-Device Cache)\n- เสียงชัดเจน ถูกต้องทุกวรรณยุกต์\n- เล่นจากแคชในเครื่องทันที 0 ms\n- สำรองด้วย espeak-ng เมื่อออฟไลน์"]
     Narrative --> HUD["🖥️ หน้าจอแสดงผล HUD\n- กรอบสีตามระดับระยะ\n- แถบสถานะโหมดและปุ่มควบคุม"]
 ```
 
@@ -134,7 +134,12 @@ ollama run qwen2.5:0.5b "สวัสดี"
 
 ### 4. รันระบบผู้ช่วย VisionMate
 ```bash
+# รันแบบค่าเริ่มต้น (โมเดล qwen2.5:0.5b, timeout 15s, เสียงพูดภาษาไทยคมชัดธรรมชาติ + On-Device Cache)
 python3 app.py
+
+# หรือกำหนดโมเดล, timeout หรือระบบเสียงตามต้องการ:
+python3 app.py --model qwen2.5:0.5b --timeout 15 --tts clear
+python3 app.py --model qwen2.5:1.5b --timeout 15 --tts clear
 ```
 
 ---
@@ -147,6 +152,7 @@ python3 app.py
 |:---:|---|---|
 | <kbd>Space</kbd> หรือ <kbd>P</kbd> | **Pause / Resume** | พักการทำงานชั่วคราว หรือเริ่มทำงานต่อ (มีเสียงแจ้งสถานะ) |
 | <kbd>F</kbd> | **Switch Mode** | สลับระหว่าง **โหมดหาของด่วน (Fast Path)** และ **โหมดเล่าบรรยากาศ (Normal LLM)** |
+| <kbd>M</kbd> | **Switch Model** | สลับโมเดล Ollama ระหว่าง **qwen2.5:0.5b** และ **qwen2.5:1.5b** ทันทีขณะรัน |
 | <kbd>Q</kbd> | **Quit** | ปิดการทำงาน ปล่อยทรัพยากรกล้องและระบบเสียงอย่างปลอดภัย |
 
 ---
