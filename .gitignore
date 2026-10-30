@@ -24,3 +24,6 @@ yolov8n_ncnn_model/
 # Shared memory audio buffers
 assistant_beep.wav
 tts_output.mp3
+
+# Internal Grading Rubrics
+01_Project_IoT_Rubric.md

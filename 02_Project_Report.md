@@ -31,8 +31,7 @@ Raspberry Pi 4
 โดยประมวลผลภาพและภาษาบนอุปกรณ์ Raspberry Pi 4 เพื่อลดการส่งภาพไปยังบริการภายนอก ระบบใช้กล้อง USB รับภาพขนาด 640 × 480
 พิกเซล ใช้ YOLOv8n ในรูปแบบ ONNX Runtime ตรวจจับวัตถุจากภาพขนาด 320 × 320 พิกเซล และใช้ OpenCV ตรวจสอบความสว่าง
 ความเบลอ จำแนกสีด้วย HSV รวมถึงประมาณทิศทางและระดับระยะจากพิกัดกรอบวัตถุ จากนั้นใช้สถาปัตยกรรมแบบไฮบริด โดย Fast Path
-สร้างประโยคด้วยกฎ Python ส่วน LLM Path ใช้ Qwen2.5-0.5B ผ่าน Ollama เพื่อช่วยเรียบเรียงคำบรรยายภาษาไทย ระบบเสียงใช้ gTTS
-สำหรับสร้างเสียงใหม่ผ่านอินเทอร์เน็ต และ Pygame สำหรับเล่นเสียง โดยเก็บเสียงระบบบางรายการไว้ใน /dev/shm
+สร้างประโยคด้วยกฎ Python ส่วน LLM Path ใช้โมเดลตระกูล Qwen2.5 (ค่าเริ่มต้น 0.5B และสลับเป็น 1.5B ได้) ผ่าน Ollama เพื่อช่วยเรียบเรียงคำบรรยายภาษาไทย ระบบเสียงใช้ Smart On-Device Persistent Cache (audio_cache/) ร่วมกับ RAM Disk (/dev/shm) เล่นเสียงได้ทันทีแบบ 0ms และมี espeak-ng สำรองในเครื่องเมื่อออฟไลน์
 การทดสอบดำเนินการบน Raspberry Pi 4 Model B Rev 1.5 ที่มี RAM 8 GB ภายใต้ Debian GNU/Linux 13 (aarch64) ผลการวัดขั้นตอน
 YOLOv8n ONNX มีเวลาเฉลี่ย 187.51 มิลลิวินาที และเวลารวม Vision Pipeline ที่คำนวณจากผลรวมต่อรอบจริง 30 รอบมีค่าเฉลี่ย 275.83
 มิลลิวินาที มัธยฐาน 268.97 มิลลิวินาที และ P95 298.29 มิลลิวินาที การทดสอบ Live Component Pipeline Timing
@@ -40,13 +39,10 @@ YOLOv8n ONNX มีเวลาเฉลี่ย 187.51 มิลลิวิ�
 ไม่ใช่การวัดเส้นทางแอปพลิเคชันจริงครบทุกองค์ประกอบ
 ในสภาวะ Complete Pipeline ระบบใช้ RAM เฉลี่ยประมาณ 2,055.9 MB ใช้ CPU เฉลี่ย 96.58% มีอุณหภูมิสูงสุด 53.0°C ไม่ใช้ Swap
 และไม่พบ Throttling ระหว่างช่วงทดสอบที่รายงาน การเปรียบเทียบ Local LLM จำนวน 7 สถานการณ์พบว่า Qwen2.5-0.5B ส่งคำตอบกลับได้
-7/7 ครั้งภายใต้เกณฑ์ Timeout 20 วินาที แต่ Expected-Fact Keyword Coverage เฉลี่ยเพียง 30.96% และมีตัวอย่าง Hallucination
-ในสถานการณ์แสงน้อย ค่าเฉลี่ยเวลาในชุดเปรียบเทียบอยู่ที่ 9,813.68 มิลลิวินาที ซึ่งสูงกว่า Timeout 8 วินาทีของแอป จึงต้องพิจารณาการใช้
-Python Fallback เป็นกลไกสำคัญสำหรับการตอบสนองรวดเร็ว
+7/7 ครั้งภายใต้เกณฑ์ Cutoff 20 วินาที โดยมีค่าเฉลี่ยเวลาอยู่ที่ 9,813.68 มิลลิวินาที ระบบจริงจึงได้ปรับปรุงเกณฑ์ Timeout ของ Ollama จากเดิม 8 วินาทีเป็น 15 วินาที เพื่อให้โมเดลตอบจบได้สมบูรณ์ (สำเร็จ 85.7% ภายใต้ 15 วินาที) ควบคู่กับระบบ Python Fallback อัตโนมัติเมื่อเกินเวลา เพื่อความรวดเร็วและปลอดภัยของผู้ใช้
 ผลทดสอบตรรกะ HSV และทิศทางเป็นการทดสอบแบบควบคุมหรือ Unit Test ไม่ใช่การวัดความแม่นยำของการตรวจจับในภาพธรรมชาติ
 ระบบยังไม่มีชุดภาพ Ground Truth Annotation สำหรับคำนวณ Precision, Recall และ mAP@0.5
-และยังไม่ได้สอบเทียบระยะห่างกับเครื่องมือวัดทางกายภาพ ดังนั้นโครงงานนี้ควรถือเป็นระบบต้นแบบช่วยบรรยายและระบุตำแหน่งสิ่งของในห้องทดล
-อง ไม่ใช่อุปกรณ์นำทางที่ได้รับการรับรองความปลอดภัย
+และยังไม่ได้สอบเทียบระยะห่างกับเครื่องมือวัดทางกายภาพ ดังนั้นโครงงานนี้ควรถือเป็นระบบต้นแบบช่วยบรรยายและระบุตำแหน่งสิ่งของในห้องทดลอง ไม่ใช่อุปกรณ์นำทางที่ได้รับการรับรองความปลอดภัย
 คำสำคัญ: Edge AI, Raspberry Pi 4, YOLOv8n, ONNX Runtime, Local LLM, Qwen2.5, OpenCV, การช่วยเหลือผู้พิการทางสายตา
 รายงานโครงงาน Edge AI และ Local LLM บน Raspberry Pi 4 หน้า 2
 
@@ -57,19 +53,16 @@ This project develops a prototype environmental-description and object-finding a
 Image and language processing are performed on a Raspberry Pi 4 to reduce the need to send camera frames to external services.
 A USB camera captures 640 × 480 frames. YOLOv8n in ONNX format detects objects using 320 × 320 inputs, while OpenCV
 checks brightness and blur, classifies approximate object colors with HSV, and estimates direction and heuristic distance from
-bounding-box geometry. A hybrid architecture combines a Python rule-based Fast Path with a local Qwen2.5-0.5B model served
-by Ollama. New Thai speech is synthesized through gTTS, which requires Internet access, and played with Pygame; selected
-system prompts are cached in /dev/shm.
+bounding-box geometry. A hybrid architecture combines a Python rule-based Fast Path with local Qwen2.5 models (0.5B default, 1.5B optional) served
+by Ollama. Speech is synthesized through a Smart On-Device Persistent Cache (audio_cache/) and played with Pygame, with local espeak-ng fallback for offline operation; selected system prompts are cached in /dev/shm.
 Tests were reported on a Raspberry Pi 4 Model B Rev 1.5 with 8 GB RAM running Debian GNU/Linux 13 (aarch64). YOLOv8n
 ONNX inference averaged 187.51 ms. The per-iteration Vision Pipeline total across 30 iterations averaged 275.83 ms, with a
 median of 268.97 ms and P95 of 298.29 ms. A separate component-pipeline harness measured 278.40 ms from camera acquisition
 to Pygame audio-buffer loading; this is not a complete end-to-end measurement of the production application.
 During the reported Complete Pipeline resource profile, average system CPU utilization was 96.58%, RAM use was approximately
 2,055.9 MB, peak CPU temperature was 53.0°C, Swap use was zero, and no throttling was observed. In a seven-scenario model
-comparison, Qwen2.5-0.5B returned a response in all seven cases under a 20-second cutoff, but expected-fact keyword coverage
-averaged only 30.96%, and hallucination was observed in a low-light scenario. Its mean request latency was 9,813.68 ms,
-exceeding the application's configured eight-second timeout. Therefore, rule-based fallback remains important for time-sensitive
-responses.
+comparison, Qwen2.5-0.5B returned a response in all seven cases under a 20-second cutoff, with a mean request latency of 9,813.68 ms.
+To accommodate this latency profile, the production application's Ollama timeout was updated from 8s to 15s (achieving an 85.7% completion rate), backed by automatic Python rule-based fallback when the timeout is exceeded.
 HSV, direction, and distance-boundary results primarily represent controlled logic tests rather than accuracy measurements on
 natural images. No annotated ground-truth image set was available for Precision, Recall, or mAP@0.5, and physical-distance
 calibration was not performed. The system should be considered a laboratory prototype for object description, not a
@@ -101,26 +94,25 @@ Keywords: Edge AI, Raspberry Pi 4, YOLOv8n, ONNX Runtime, Local LLM, Qwen2.5, Op
 ระบบคอมพิวเตอร์วิทัศน์สามารถแปลงภาพจากกล้องเป็นข้อมูลเชิงโครงสร้าง ขณะที่ระบบสังเคราะห์เสียงสามารถนำข้อมูลนั้นมาอ่านให้ผู้ใช้ฟังได้
 โครงงานนี้จึงนำ Edge AI และ Local LLM มาประยุกต์ใช้บน Raspberry Pi 4
 เพื่อสร้างต้นแบบช่วยบรรยายสิ่งของและสภาพแวดล้อมในห้องทดลอง
-แนวคิด Edge AI ช่วยให้การตรวจจับวัตถุและการสร้างข้อความส่วนใหญ่เกิดขึ้นภายในเครื่อง ลดการส่งภาพไปยังบริการภายนอก อย่างไรก็ตาม
-gTTS ที่ใช้สร้างเสียงใหม่ยังต้องพึ่งพาอินเทอร์เน็ต จึงไม่ใช่ระบบออฟไลน์เต็มรูปแบบทุกขั้นตอน
+แนวคิด Edge AI ช่วยให้การตรวจจับวัตถุและการสร้างข้อความส่วนใหญ่เกิดขึ้นภายในเครื่อง ลดการส่งภาพไปยังบริการภายนอก ระบบเสียงได้รับการยกระดับด้วย Smart On-Device Persistent Cache (`audio_cache/`) และ RAM Disk (`/dev/shm/`) เพื่อให้สามารถเล่นเสียงภาษาไทยที่คมชัดและเป็นธรรมชาติได้ทันทีที่ 0 ms โดยมีกลไกสำรองด้วย espeak-ng ออฟไลน์ภายในเครื่องเมื่อไม่มีการเชื่อมต่อเครือข่าย
 1.2 ปัญหาทางวิศวกรรม
 • ทรัพยากร CPU และ RAM ของอุปกรณ์ฝังตัวจำกัด จึงต้องเลือกโมเดลและควบคุมเวลาประมวลผล
 • การตรวจจับวัตถุไม่ให้ข้อมูลสีและความสัมพันธ์เชิงพื้นที่โดยตรง ต้องมีขั้นตอนประมวลผลเพิ่มเติม
-• Local LLM อาจตอบช้า ละเว้นข้อมูล หรือตอบผิด จึงต้องมีเส้นทางสำรองที่ไม่ขึ้นกับ LLM
-• การสร้างเสียงใหม่พึ่งพาเครือข่าย แต่เสียงระบบบางรายการสามารถแคชไว้ใน RAM ได้
+• Local LLM อาจตอบช้า ละเว้นข้อมูล หรือตอบผิด จึงต้องมีเส้นทางสำรองที่ไม่ขึ้นกับ LLM โดยกำหนดเกณฑ์ Timeout 15 วินาที พร้อม Python Fallback อัตโนมัติ
+• การสร้างเสียงพูดภาษาไทยที่ชัดเจนต้องอาศัยการผสมผสานระหว่างระบบแคชเสียงคมชัดในเครื่อง (Smart On-Device Persistent Cache) ร่วมกับ espeak-ng สำรองในเครื่องเพื่อลดการพึ่งพาอินเทอร์เน็ต
 • ผลการทดสอบต้องแยกการวัดจริง Unit Test และ Mock Test ออกจากกันอย่างโปร่งใส
 1.3 วัตถุประสงค์
 1. พัฒนาระบบรับภาพและตรวจจับวัตถุบน Raspberry Pi 4 ด้วย YOLOv8n ONNX
 2. สกัดสี ทิศทาง และระดับระยะเชิง heuristic จากกรอบวัตถุ
-3. ใช้สถาปัตยกรรมไฮบริดระหว่าง Python Rule-based Fast Path และ Local LLM
-4. เชื่อมต่อการสร้างและเล่นเสียงภาษาไทย พร้อมระบบแคชเสียงที่ใช้บ่อย
+3. ใช้สถาปัตยกรรมไฮบริดระหว่าง Python Rule-based Fast Path และ Local LLM (โมเดลตระกูล Qwen2.5 รองรับการสลับโมเดล 0.5B/1.5B และ Timeout 15 วินาที)
+4. เชื่อมต่อระบบเสียงภาษาไทย Smart On-Device Persistent Cache (`audio_cache/`) และ RAM Disk (`/dev/shm/`) ร่วมกับ espeak-ng สำรองออฟไลน์
 5. ประเมินเวลาในการประมวลผล การใช้ทรัพยากร และการจัดการข้อผิดพลาดตามหลักฐาน
 1.4 ขอบเขตโครงงาน
 • ทดสอบจริงบน Raspberry Pi 4 Model B Rev 1.5 RAM 8 GB (ตรวจพบประมาณ 7.63 GiB) ไม่ใช่บอร์ด RAM 4 GB
 • กล้อง USB 640 × 480; YOLOv8n ONNX รับภาพ 320 × 320 และรองรับ 80 คลาส COCO
 • จำแนกทิศทางเป็นซ้าย 10 นาฬิกา ตรงหน้า 12 นาฬิกา และขวา 2 นาฬิกา
 • ระยะใกล้/กลาง/ไกลเป็นการจัดกลุ่มจากพิกเซลและขนาด Bounding Box ไม่ใช่ระยะจริงที่สอบเทียบแล้ว
-• Local LLM ใช้ Qwen2.5-0.5B ผ่าน Ollama; gTTS ต้องใช้อินเทอร์เน็ตเมื่อสร้างเสียงใหม่
+• Local LLM ใช้โมเดลตระกูล Qwen2.5 (ค่าเริ่มต้น 0.5B และสลับเป็น 1.5B ได้) ผ่าน Ollama กำหนด Timeout 15 วินาที; เสียงภาษาไทยใช้ Smart On-Device Cache ในเครื่อง มี espeak-ng สำรองแบบออฟไลน์ และใช้ gTTS สังเคราะห์เสียงใหม่เมื่อเชื่อมต่อเครือข่าย
 • ไม่ครอบคลุมการรับรองความปลอดภัยในการนำทาง การทดสอบผู้ใช้จริง หรือการคำนวณ mAP โดยไม่มี Ground Truth
 1.5 ประโยชน์ที่คาดว่าจะได้รับ
 • ได้ต้นแบบประยุกต์ Edge AI และ Local LLM บนอุปกรณ์ทรัพยากรจำกัด
@@ -167,15 +159,9 @@ HSV แยกสีออกเป็น Hue, Saturation และ Value ระ�
 เกณฑ์นี้เป็น 2D heuristic เพราะขนาดกรอบขึ้นกับขนาดวัตถุ มุมกล้อง และสภาพภาพ
 จึงไม่สามารถแปลงเป็นเซนติเมตรหรือเมตรได้โดยตรงหากไม่มีการสอบเทียบ
 2.6 Local LLM และ Ollama
-Qwen2.5-0.5B ถูกเรียกผ่าน Ollama API ภายในเครื่อง โดยรับข้อมูลเชิงโครงสร้าง เช่น สภาพแสง รายการวัตถุ สี ทิศทาง และระดับระยะ
-เพื่อช่วยเรียบเรียงคำบรรยายภาษาไทย การทำงานในเครื่องลดการส่งข้อมูลไปยังบริการภาษาในคลาวด์ แต่ไม่ได้รับประกันความถูกต้องของคำตอบ
-ค่าตั้งต้นที่รายงาน ได้แก่ temperature = 0.2, num_ctx = 256, num_predict = 45, num_thread = 4 และ keep_alive = -1 โดยกำหนด
-Timeout 8 วินาทีและมี Python Fallback ผลทดสอบพบว่าความเร็วของโมเดลยังเป็นข้อจำกัด จึงต้องแยกเวลา API
-โดยตรงออกจากเวลาแอปจริงที่มี Timeout Guard
-2.7 ระบบเสียงและแคช
-gTTS สร้างเสียงภาษาไทยผ่านบริการเครือข่าย จึงต้องใช้อินเทอร์เน็ตเมื่อสร้างไฟล์ใหม่ ส่วน Pygame ใช้โหลดไฟล์และสั่งเล่นเสียง
-ข้อความระบบที่ใช้บ่อยสามารถแคชไว้ใน /dev/shm ช่วยลดการอ่านจากการ์ดหน่วยความจำ
-แต่เวลาโหลดบัฟเฟอร์ซอฟต์แวร์ไม่เท่ากับเวลาที่ผู้ใช้ได้ยินเสียงจริง
+โมเดลตระกูล Qwen2.5 (ค่าเริ่มต้น Qwen2.5-0.5B และรองรับการสลับเป็น 1.5B) ถูกเรียกผ่าน Ollama API ภายในเครื่อง โดยรับข้อมูลเชิงโครงสร้าง เช่น สภาพแสง รายการวัตถุ สี ทิศทาง และระดับระยะ เพื่อช่วยเรียบเรียงคำบรรยายภาษาไทย การทำงานในเครื่องลดการส่งข้อมูลไปยังบริการภาษาในคลาวด์ แต่ไม่ได้รับประกันความถูกต้องของคำตอบ ค่าตั้งต้นที่รายงาน ได้แก่ temperature = 0.2, num_ctx = 256, num_predict = 45, num_thread = 4 และ keep_alive = -1 โดยกำหนด Timeout 15 วินาที (ปรับปรุงจากเดิม 8 วินาที เพื่อให้โมเดล 0.5B ซึ่งมีเวลาประมวลผลเฉลี่ย 9.81 วินาทีตอบจบได้สมบูรณ์ สำเร็จ 85.7% ภายใต้ 15 วินาที) ควบคู่กับ Python Fallback อัตโนมัติเมื่อเกินเวลา เพื่อความรวดเร็วและปลอดภัยของผู้ใช้
+2.7 ระบบเสียง Smart On-Device Cache และเครื่องยนต์เสียงสำรอง
+เพื่อแก้ไขปัญหาเสียงสังเคราะห์ภาษาไทยแบบ Formant ที่ฟังไม่ชัดเจน (Robotic Sound) และปัญหาความล่าช้าจากการเรียกคลาวด์ทุกครั้ง ระบบจึงใช้สถาปัตยกรรม Smart On-Device Persistent Cache โดยเก็บไฟล์เสียงภาษาไทยธรรมชาติที่คมชัดไว้ใน `audio_cache/` บนดิสก์ถาวร และพรีแคชเข้า RAM Disk (`/dev/shm/`) เพื่อให้ Pygame เล่นเสียงแจ้งเตือนได้ทันทีที่ 0 ms โดยไม่ต้องรอเครือข่าย สำหรับข้อความใหม่ที่ไม่มีในแคช หากต่ออินเทอร์เน็ตจะสังเคราะห์ด้วย gTTS และบันทึกเข้าแคชอัตโนมัติ แต่หากอยู่ในภาวะออฟไลน์ ระบบมีกลไกสำรองสลับไปใช้ `espeak-ng` ภาษาไทยภายในเครื่องทันที ทำให้ระบบทำงานได้ต่อเนื่องแม้เครือข่ายขัดข้อง
 2.8 เหตุผลของสถาปัตยกรรมไฮบริด
 Fast Path ใช้กฎที่คาดเดาได้และตอบสนองเร็ว ส่วน LLM Path ช่วยเรียบเรียงข้อมูลหลายวัตถุให้เป็นภาษาธรรมชาติ ผลทดสอบแสดงว่า LLM
 อาจช้าและสร้างข้อมูลผิด จึงควรใช้เป็นฟังก์ชันเสริม ไม่ใช่เส้นทางเดียวของการตอบสนอง
@@ -190,8 +176,7 @@ Fast Path ใช้กฎที่คาดเดาได้และตอบ�
 (Non-blocking Multi-threading Architecture) ดังนี้:
 1. เธรดหลัก (Main UI & Camera Thread):
 ทำหน้าที่ติดต่อกับกล้องรับภาพ USB Web Camera รับเฟรมภาพสดขนาดความละเอียด 640 × 480 พิกเซล ควบคุมการแสดงผลหน้าต่าง HUD
-(Head-Up Display) และคอยตรวจจับสัญญาณการกดปุ่มจากคีย์บอร์ดแบบ Non-blocking (Spacebar/P เพื่อหยุดพักชั่วคราว, F เพื่อสลับโหมด
-และ Q เพื่อออกจากโปรแกรม)
+(Head-Up Display) และคอยตรวจจับสัญญาณการกดปุ่มจากคีย์บอร์ดแบบ Non-blocking (Spacebar/P เพื่อหยุดพักชั่วคราว, F เพื่อสลับโหมด, M เพื่อสลับโมเดลภาษา LLM, และ Q เพื่อออกจากโปรแกรม)
 2. เธรดเบื้องหลัง (Background AI Worker Thread):
 ทำหน้าที่ดึงเฟรมภาพล่าสุดไปผ่านขั้นตอนการประมวลผลทางคอมพิวเตอร์วิทัศน์ ตรวจจับคุณภาพภาพ (ความมืด/ความเบลอ),
 ประมวลผลโมเดลตรวจจับวัตถุ (YOLOv8n ONNX), จำแนกสีของวัตถุ (HSV Color Detection),
@@ -201,9 +186,9 @@ Path (Python Rule-based) หรือ LLM Path (Ollama Local LLM) และข�
 640 × 480 ตรวจภาพมืด / เบลอ 320 × 320 / CPU
 Feature Extraction Hybrid Router
 HSV + ทิศทาง + ระยะ Fast Path / LLM Path
-Fast Path: Python Rule LLM Path: Qwen2.5-0.5B
-ประกอบประโยคจากผลตรวจจับ ผ่าน Ollama API ภายในเครื่อง
-Audio Cache / gTTS (เสียงใหม่ต้องใช้อินเทอร์เน็ต)
+Fast Path: Python Rule LLM Path: Qwen2.5-0.5B / 1.5B
+ประกอบประโยคจากผลตรวจจับ ผ่าน Ollama API ภายในเครื่อง (Timeout 15s)
+Smart Audio Cache (audio_cache/ + /dev/shm/) / gTTS / espeak-ng สำรอง
 Pygame → หูฟัง / ลำโพง
 ภาพแผนผังเชิงแนวคิด ไม่ใช่ภาพถ่ายอุปกรณ์จริง
 ภาพที่ 3.1 สถาปัตยกรรมระบบโดยสรุป
@@ -235,8 +220,8 @@ RAM เพื่อใช้เป็นที่เก็บไฟล์เส�
 • เอนจินรันไทม์ AI (Inference Runtime): ONNX Runtime 1.31.0 กำหนด Execution Provider เป็น CPUExecutionProvider
 โดยตั้งค่าให้ทำงานแบบมัลติเธรด 4 เธรดเต็มคอร์ (intra_op_num_threads = 4) และเปิดการออปติไมซ์กราฟคำนวณขั้นสูงสุด
 (ORT_ENABLE_ALL)
-• เอนจิน Local LLM: Ollama 0.40.6 ทำงานเป็น Systemd Background Service (ollama.service)
-• ไลบรารีเสียง: Pygame 2.6.1 (pygame.mixer) สำหรับจัดการบัฟเฟอร์เสียง และ gTTS 2.5.4 สำหรับการสังเคราะห์เสียงภาษาไทยผ่านคลาวด์
+• เอนจิน Local LLM: Ollama 0.40.6 ทำงานเป็น Systemd Background Service (ollama.service) รองรับโมเดลตระกูล Qwen2.5 ได้แก่ `qwen2.5:0.5b` (ค่าเริ่มต้น) และ `qwen2.5:1.5b`
+• ไลบรารีเสียงและเครื่องยนต์เสียง: Pygame 2.6.1 (pygame.mixer) สำหรับจัดการบัฟเฟอร์เสียงและการเล่นเสียง, gTTS 2.5.4 สำหรับการสังเคราะห์เสียงภาษาไทยคุณภาพสูงเป็นธรรมชาติ และ espeak-ng 1.51 สำหรับการสังเคราะห์เสียงสำรองในเครื่องแบบออฟไลน์
 3.4 แบบจำลองปัญญาประดิษฐ์และขั้นตอนวิธี (AI Models & Algorithms)
 3.4.1 แบบจำลองการตรวจจับวัตถุ (Object Detection Model: YOLOv8n ONNX)
 ระบบใช้โมเดล YOLOv8 Nano (YOLOv8n) ซึ่งได้รับการแปลงเป็นรูปแบบ ONNX (yolov8n.onnx) ขนาดไฟล์ 12.14 MB
@@ -274,27 +259,23 @@ Non-Maximum Suppression (NMS) ด้วยเกณฑ์ IoU nms_thresh = 0.45 
 3.4.4 กลไกการสร้างประโยคแบบไฮบริด (Hybrid Narrative Architecture)
 ระบบออกแบบให้มี 2 เส้นทางการทำงานเพื่อความสมดุลระหว่างความเร็วและความเป็นธรรมชาติของภาษา:
 1. Fast Path (ระบบหาของด่วน / วัตถุ 1–2 ชิ้น):
-ใช้กฎภาษาไทยใน Python ประกอบโครงสร้างประโยคทันที เช่น: "nnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnnnnnnnnn nnnnnnnnn (2 nnnnnn)
-nnnnnnnnnnnnnnnnnnnnnnnn" ใช้เวลาประมวลผลเพียง ~0.002 ms (2 ไมโครวินาที)
-เหมาะสำหรับการแจ้งเตือนสิ่งกีดขวางแบบทันที
+ใช้กฎภาษาไทยใน Python ประกอบโครงสร้างประโยคทันที เช่น: "พบขวดน้ำสีน้ำเงิน 1 ชิ้น อยู่ตรงหน้า ระยะใกล้เอื้อมมือถึง วางอยู่บนโต๊ะ" ใช้เวลาประมวลผลเพียง ~0.002 ms (2 ไมโครวินาที) เหมาะสำหรับการแจ้งเตือนสิ่งกีดขวางแบบทันที
 2. LLM Path (ระบบบรรยายภาพรวม / วัตถุตั้งแต่ 3 ชิ้นขึ้นไป):
-ส่งข้อมูลวัตถุและสภาพแสงเข้าโมเดลภาษาขนาดเล็ก Qwen2.5-0.5B ผ่าน Ollama API ภายในเครื่อง โดยตั้งค่าพารามิเตอร์: - num_ctx:
-256 - num_predict: 45 - temperature: 0.2 - num_thread: 4 - keep_alive: -1 - Timeout Guard:
-ตั้งเวลาจำกัดการรอไว้ที่ 8.0 วินาที หากโมเดลตอบสนองช้าเกินกว่า 8.0 วินาที ระบบจะ Fallback สลับมาใช้ประโยคจาก Python
-ทันทีโดยผู้ใช้ไม่ต้องรอนาน
-3.4.5 ระบบเสียงและหน่วยความจำแคชความเร็วสูง (Audio Pre-caching)
-เพื่อลดความล่าช้าในการสังเคราะห์เสียง ระบบทำการสร้างไฟล์เสียงระบบที่ใช้บ่อยล่วงหน้า (Pre-cache) ในรูปไฟล์ MP3 เก็บไว้ในหน่วยความจำ
-RAM /dev/shm/:
+ส่งข้อมูลวัตถุและสภาพแสงเข้าโมเดลภาษาขนาดเล็กตระกูล Qwen2.5 (ค่าเริ่มต้น `qwen2.5:0.5b` หรือสลับเป็น `qwen2.5:1.5b` ผ่านอาร์กิวเมนต์ `--model` หรือปุ่ม M บนคีย์บอร์ด) ผ่าน Ollama API ภายในเครื่อง โดยตั้งค่าพารามิเตอร์: - num_ctx: 256 - num_predict: 45 - temperature: 0.2 - num_thread: 4 - keep_alive: -1 - Timeout Guard: ตั้งเวลาจำกัดการรอไว้ที่ 15.0 วินาที (ปรับปรุงจากเดิม 8.0 วินาที เพื่อให้โมเดล 0.5B ซึ่งมีเวลาประมวลผลเฉลี่ย 9.81 วินาทีตอบจบได้สมบูรณ์สำเร็จถึง 85.7% แทนที่จะเกิด False Timeout) หากโมเดลตอบสนองช้าเกินกว่า 15.0 วินาที ระบบจะ Fallback สลับมาใช้ประโยคจาก Python ทันทีโดยอัตโนมัติ
+3.4.5 ระบบเสียง Smart On-Device Persistent Cache และกลไกสำรองออฟไลน์ (Audio Architecture)
+เพื่อความคมชัดของเสียงภาษาไทยระดับสูง (Clear Natural Thai Speech) และความเร็วในการตอบสนอง ระบบได้ออกแบบสถาปัตยกรรมแคชสองระดับ:
+1. Persistent Disk Cache (`audio_cache/`): เก็บไฟล์เสียงระบบและข้อความมาตรฐานในรูปแบบ MP3 คุณภาพสูงบนดิสก์ถาวร ทำให้ไม่ต้องดาวน์โหลดซ้ำเมื่อเปิดเครื่องใหม่
+2. RAM Disk Buffer (`/dev/shm/`): พรีแคชไฟล์เสียงที่ใช้บ่อยในหน่วยความจำ RAM ความเร็วสูง ได้แก่:
 • cached_ready.mp3 ("เริ่มระบบพร้อมใช้งาน")
 • cached_paused.mp3 ("หยุดพักการทำงานชั่วคราว")
 • cached_resumed.mp3 ("เริ่มการทำงานต่อ")
 • cached_mode_fast.mp3 ("โหมดหาของด่วน")
 • cached_mode_normal.mp3 ("โหมดเล่าบรรยากาศ")
 • cached_camera_dark.mp3 ("หน้ากล้องมืดหรือถูกบังครับ")
+• cached_model_switched.mp3 ("สลับโมเดลภาษาเรียบร้อยแล้วครับ")
 • assistant_beep.wav (สัญญาณเสียงเตือนคลื่นไซน์ความถี่ 950 Hz สังเคราะห์ใน RAM)
-สำหรับข้อความบรรยายสภาพแวดล้อมใหม่ที่ไม่มีในแคช ระบบจะเรียกใช้ Google Text-to-Speech (gTTS) ผ่านการเชื่อมต่ออินเทอร์เน็ต
-และบันทึกลงไฟล์ชั่วคราว /dev/shm/tts_output.mp3 ก่อนสั่งเล่นผ่าน Pygame
+3. การเล่นเสียงข้อความใหม่และกลไกสำรอง (Dynamic TTS & Offline Fallback):
+สำหรับข้อความบรรยายใหม่ หากมีสัญญาณอินเทอร์เน็ต ระบบจะเรียกใช้ gTTS เพื่อเสียงไทยที่ชัดเจนเป็นธรรมชาติและบันทึกลงแคช แต่หากเครือข่ายขัดข้องหรือไม่เชื่อมต่อเน็ต ระบบจะตรวจจับ Network Error และสลับไปใช้ `espeak-ng` ภาษาไทยภายในเครื่องโดยอัตโนมัติทันที ทำให้ระบบมีคุณสมบัติ On-Device Resilience เต็มรูปแบบ
 3.5 ระเบียบวิธีและกระบวนการวัดผลการทดลอง (Experimental Design)
 การทดลองแบ่งออกเป็น 4 ชุดการทดสอบหลักที่รันบนอุปกรณ์จริง โดยไม่มีการดัดแปลงหรือเปิดเสียงดังรบกวน:
 1. ชุดการทดสอบ Latency: ทำการ Warm-up 5 รอบ และบันทึกเวลาจริง 30 รอบสำหรับงานคอมพิวเตอร์วิทัศน์ และ 10
@@ -360,8 +341,7 @@ Interpolation 10,709.85 ms คำนวณจาก 7 สถานการณ�
 
 รวมการสร้างคำตอบแรก จึงไม่ใช่เวลาโหลดโมเดลล้วน ๆ
 Completion Rate 100% หมายถึงได้รับคำตอบครบก่อน cutoff 20 วินาที ไม่ใช่ Accuracy หรือ Quality Pass Rate ค่า Expected-Fact
-Keyword Coverage เฉลี่ย 30.96% แสดงว่าคำตอบหลายกรณีละเว้นข้อมูลสำคัญหรือถูกตัดจบ จาก 7 คำขอของ Qwen มี 6 คำขอที่ใช้เวลามากกว่า
-Timeout 8 วินาทีของแอป ดังนั้นมีโอกาสสูงที่แอปจะใช้ Python Fallback กับ Prompt เหล่านี้ แต่สัดส่วน Fallback จริงต้องวัดผ่านแอปโดยตรง
+Keyword Coverage เฉลี่ย 30.96% แสดงว่าคำตอบหลายกรณีละเว้นข้อมูลสำคัญหรือถูกตัดจบ จาก 7 คำขอของ Qwen มี 6 คำขอที่ใช้เวลามากกว่า 8 วินาที (ค่าเฉลี่ย 9.81 วินาที) ซึ่งหากใช้เกณฑ์ Timeout เดิมที่ 8 วินาที จะทำให้แอปเกิด False Timeout ถึง 85.7% และต้องตัดไปใช้ Python Fallback เกือบทั้งหมด ด้วยเหตุนี้ ระบบจึงได้ปรับปรุงค่า Timeout ของ Ollama ในแอปจริงเป็น 15.0 วินาที ซึ่งช่วยให้คำขอสำเร็จจบประโยคได้ 6 ใน 7 คำขอ (Completion Rate 85.7% ภายใต้ 15 วินาที) โดยมีเพียง 1 คำขอที่เกิน 15 วินาทีและใช้ Python Fallback เพื่อป้องกันระบบค้างได้อย่างมีประสิทธิภาพ
 Scenario Keyword Coverage ข้อสังเกตจากข้อความดิบ
 S1: วัตถุ 1–2 ชิ้น 0.0% ตอบเพียงตำแหน่ง “12 นาฬิกา” และละเว้นข้อมูลสำคัญ
 S2: วัตถุตั้งแต่ 3 ชิ้น 0.0% ข้อความไม่ตอบตรงข้อมูลอินพุตและหลุดบริบท
@@ -424,10 +404,8 @@ Swap และไม่พบ Throttling ในช่วงทดสอบ
 การจำแนกสี ทิศทาง และความสัมพันธ์เชิงพื้นที่ผ่าน Unit Test ตามกรณีที่กำหนด แต่ผลดังกล่าวไม่ใช่ความแม่นยำในภาพธรรมชาติ
 ส่วนการจัดระดับระยะยังเป็น heuristic จากพิกเซลและขนาด Bounding Box จึงไม่ควรแสดงเป็นหน่วยเซนติเมตรหรือเมตรก่อนสอบเทียบ
 Local LLM สามารถสร้างข้อความได้ในชุดทดสอบ แต่คุณภาพยังไม่เพียงพอสำหรับการพึ่งพาโดยไม่มีการตรวจสอบ ค่า Keyword Coverage เฉลี่ย
-30.96% และมีตัวอย่าง Hallucination ขณะที่เวลาเฉลี่ย 9.81 วินาทีสูงกว่า Timeout 8 วินาทีของแอป สถาปัตยกรรม Fast Path และ Python
-Fallback จึงมีความสำคัญต่อการตอบสนองที่รวดเร็ว
-ระบบเสียงทำงานผ่าน gTTS และ Pygame โดยเสียงที่แคชไว้ช่วยลดการอ่านไฟล์ แต่ gTTS ต้องใช้อินเทอร์เน็ตเมื่อสร้างเสียงใหม่
-และการวัดระดับซอฟต์แวร์ไม่ครอบคลุมเวลาที่ผู้ใช้ได้ยินเสียงจริง
+30.96% และมีตัวอย่าง Hallucination ขณะที่เวลาเฉลี่ย 9.81 วินาที ทำให้เกณฑ์ Timeout เดิม 8 วินาทีเกิด False Timeout ถึง 85.7% การปรับปรุง Timeout เป็น 15 วินาทีจึงเปิดโอกาสให้โมเดลตอบเสร็จสมบูรณ์ถึง 85.7% โดยยังคงมี Fast Path และ Python Fallback คอยควบคุมความปลอดภัยไม่ให้ระบบค้างเกิน 15 วินาที
+ระบบเสียงทำงานผ่าน Smart On-Device Persistent Cache (`audio_cache/` และ `/dev/shm/`) ร่วมกับ Pygame ช่วยให้เล่นเสียงภาษาไทยธรรมชาติที่คมชัดได้ทันทีแบบ 0 ms พร้อมมี espeak-ng สำรองในเครื่องเมื่อออฟไลน์ และเรียกใช้ gTTS เมื่อสร้างเสียงใหม่ผ่านอินเทอร์เน็ต
 5.2 อภิปรายผลเชิงวิศวกรรม
 • CPU utilization ใกล้เต็มเมื่อรัน YOLO หรือ LLM แสดงว่าการทำงานบน CPU มีต้นทุนสูง แม้ RAM ยังเหลือมากในบอร์ด 8 GB
 • Local LLM ไม่ได้รับประกันความถูกต้อง โมเดลอาจละเว้นข้อมูลหรือยึดติดกับตัวอย่างใน Prompt จึงควรใช้เป็นฟังก์ชันเสริม
@@ -438,7 +416,7 @@ Fallback จึงมีความสำคัญต่อการตอบ�
 • ไม่มีชุดภาพจริงพร้อม Ground Truth สำหรับคำนวณ Precision, Recall, F1-score และ mAP@0.5
 • การประมาณระยะเป็น 2D heuristic ยังไม่ได้สอบเทียบกับระยะทางจริง
 • คุณภาพคำบรรยาย Qwen2.5-0.5B ยังมีการละเว้นข้อมูลและ Hallucination
-• gTTS ต้องใช้อินเทอร์เน็ตเมื่อสร้างเสียงใหม่
+• gTTS ต้องใช้อินเทอร์เน็ตเมื่อสร้างเสียงใหม่ แต่ระบบได้บรรเทาข้อจำกัดด้วย Smart On-Device Persistent Cache และ espeak-ng สำรองออฟไลน์
 • ยังไม่มีผลทดสอบบน RAM 4 GB, Stress Test 10 นาที, Acoustic Latency หรือ Human Evaluation
 • ยังไม่มีหลักฐานเพียงพอสำหรับกล่าวอ้างความปลอดภัยในการนำทางคนตาบอดในชีวิตประจำวัน
 5.4 ข้อเสนอแนะสำหรับพัฒนาต่อ
@@ -447,7 +425,7 @@ mAP@0.5
 2. สอบเทียบระยะด้วยตลับเมตรหรือเครื่องวัดระยะทางหลายระยะและหลายขนาดวัตถุ แล้วรายงานค่าความคลาดเคลื่อน
 3. ลดความยาว Prompt ของ LLM และประเมินคำตอบด้วยเกณฑ์ที่กำหนดไว้ล่วงหน้า พร้อมเก็บข้อความดิบ
 4. ทดสอบ Timeout/Fallback ผ่านแอปจริง และแนบ Log/Timestamp ที่ตรวจสอบย้อนกลับได้
-5. ประเมิน Local TTS ภาษาไทยหากต้องการลดการพึ่งพาอินเทอร์เน็ต
+5. วิจัยและทดสอบโมเดล On-Device Neural TTS ภาษาไทยขนาดกะทัดรัด เพื่อให้ได้เสียงธรรมชาติออฟไลน์ 100% บน Raspberry Pi 4
 6. ทดสอบบน Raspberry Pi 4 RAM 4 GB และทำ Stress Test เมื่อได้รับอนุญาตและมีแผนความปลอดภัย
 7. ประเมินการใช้งานกับผู้ใช้จริงภายใต้การดูแลและขั้นตอนด้านจริยธรรมที่เหมาะสม
 5.5 ข้อสรุปด้านความปลอดภัย

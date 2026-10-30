@@ -226,7 +226,6 @@ VisionMate/
 ├── requirements.txt                   # Python dependencies & system packages
 ├── audio_cache/                       # Persistent on-device clear Thai speech cache (0 ms)
 │
-├── 01_Project_IoT_Rubric.md           # IoT Course Evaluation Rubric
 ├── 02_Project_Report.md               # Complete 5-Chapter Academic Project Report
 ├── 03_User_Manual.md                  # Quick User Manual (1-2 pages)
 ├── 04_Model_Selection_and_Comparison.md # Engineering Report: Model Rationale & Baseline Benchmarks
